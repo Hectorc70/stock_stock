@@ -5,6 +5,11 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      backgroundColor:Theme.of(context).colorScheme.primary,
+      body:Center(
+        child: Image.asset('assets/images/logo2.png'),
+      ),
+    );
   }
 }
