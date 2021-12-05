@@ -8,15 +8,15 @@ import 'package:stock_stock/src/presentation/widgets/fields_widget.dart';
 import 'package:stock_stock/src/presentation/widgets/google_container.dart';
 import 'package:stock_stock/src/presentation/widgets/login_header_widget.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   static Widget init(BuildContext context) {
     return ChangeNotifierProvider(
         create: (_) => LoginProvider(
             repositoryInterface: context.read<RepositoryInterface>()),
         builder: (_, __) {
-          return const LoginPage();
+          return const RegisterPage();
         });
   }
 
@@ -39,7 +39,7 @@ class LoginPage extends StatelessWidget {
             height: 30.0,
           ),
           Text(
-            'Login con email',
+            'Registro con email',
             style: Theme.of(context).textTheme.headline5,
           ),
           const SizedBox(
@@ -53,23 +53,19 @@ class LoginPage extends StatelessWidget {
                 CustomFormEmailField(
                   labelField: 'Correo electronico',
                 ),
+                CustomFormField(
+                  labelField: 'Nombre de usuario',
+                  hintField: 'ejemplo:Juan Perez',
+                ),
                 CustomFormPasswordField(
                   labelField: 'Contraseña',
                 ),
-                Container(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'recuperar contraseña',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: Color(0xFF7FB3C5),
-                          ),
-                        ))),
+                const SizedBox(
+                  height: 30.0,
+                ),
                 ButtonPrimary(
                   actionButton: () {},
-                  textButton: 'Login',
+                  textButton: 'Aceptar',
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -97,19 +93,6 @@ class LoginPage extends StatelessWidget {
                   height: 20.0,
                 ),
                 googleButton(action: () {}),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('¿No tienes cuenta?'),
-                    TextButton(
-                        onPressed: () =>
-                            Navigator.of(context).pushNamed('registerPage'),
-                        child: Text('Registrate'))
-                  ],
-                ),
               ],
             )),
           ),
