@@ -5,14 +5,14 @@ import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/splash_page/splash_provider.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  SplashPage._();
 
   static Widget init(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SplashProvider(
           repositoryInterface: context.read<RepositoryInterface>()),
       builder: (_, __) {
-        return const SplashPage();
+        return  SplashPage._();
       },
     );
   }
@@ -23,7 +23,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   void _init() async {
-    final provider = context.read<SplashProvider>();
+    final provider = Provider.of<SplashProvider>(context, listen: false);
     final result = await provider.loadData();
 
     if (result) {
@@ -35,10 +35,10 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
-    super.initState();
   }
 
   @override
