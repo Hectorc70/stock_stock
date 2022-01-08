@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class CustomFormField extends StatelessWidget {
   String labelField = '';
   String hintField = '';
+  TextEditingController controller;
 
   double widthField;
 
   CustomFormField(
       {required this.labelField,
       required this.hintField,
+      required this.controller,
       this.widthField = double.maxFinite,
       Key? key})
       : super(key: key);
@@ -30,8 +32,8 @@ class CustomFormField extends StatelessWidget {
                 color: colorSecond, fontFamily: 'PoppinsLight', fontSize: 18.0),
           ),
           TextFormField(
-            style: const TextStyle(
-                color: Color(0xFF7FB3C5), fontFamily: 'Poppins'),
+            style: TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
+            controller: controller,
             decoration: InputDecoration(
                 hintText: hintField,
                 hintStyle: const TextStyle(
@@ -67,9 +69,13 @@ class CustomFormField extends StatelessWidget {
 class CustomFormEmailField extends StatelessWidget {
   String labelField = '';
   double widthField;
+  TextEditingController controller;
 
   CustomFormEmailField(
-      {required this.labelField, this.widthField = double.maxFinite, Key? key})
+      {required this.controller,
+      required this.labelField,
+      this.widthField = double.maxFinite,
+      Key? key})
       : super(key: key);
 
   @override
@@ -88,8 +94,8 @@ class CustomFormEmailField extends StatelessWidget {
                 color: colorSecond, fontFamily: 'PoppinsLight', fontSize: 18.0),
           ),
           TextFormField(
-            style: const TextStyle(
-                color: Color(0xFF7FB3C5), fontFamily: 'Poppins'),
+            style: TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
+            controller: controller,
             decoration: InputDecoration(
                 hintText: 'ejemplo@gmail.com',
                 hintStyle: const TextStyle(
@@ -128,9 +134,13 @@ class CustomFormEmailField extends StatelessWidget {
 class CustomFormPasswordField extends StatelessWidget {
   String labelField = '';
   double widthField;
+  TextEditingController controller;
 
   CustomFormPasswordField(
-      {required this.labelField, this.widthField = double.maxFinite, Key? key})
+      {required this.labelField,
+      required this.controller,
+      this.widthField = double.maxFinite,
+      Key? key})
       : super(key: key);
 
   @override
@@ -149,7 +159,8 @@ class CustomFormPasswordField extends StatelessWidget {
                 color: colorSecond, fontFamily: 'PoppinsLight', fontSize: 18.0),
           ),
           TextFormField(
-            style: TextStyle(color: Color(0xFF7FB3C5), fontFamily: 'Poppins'),
+            controller: controller,
+            style: TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
             obscureText: true,
             decoration: InputDecoration(
                 hintText: '*******',

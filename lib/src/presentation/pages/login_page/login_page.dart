@@ -50,12 +50,12 @@ class LoginPage extends StatelessWidget {
             child: Form(
                 child: Column(
               children: [
-                CustomFormEmailField(
+                /*   CustomFormEmailField(
                   labelField: 'Correo electronico',
                 ),
                 CustomFormPasswordField(
                   labelField: 'Contraseña',
-                ),
+                ), */
                 Container(
                     alignment: AlignmentDirectional.centerEnd,
                     child: TextButton(

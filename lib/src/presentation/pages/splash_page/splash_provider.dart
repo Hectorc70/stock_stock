@@ -8,7 +8,7 @@ class SplashProvider extends ChangeNotifier {
 
   Future<bool> loadData() async {
     final resp =
-        await repositoryInterface.loadPrefs(type: String, key: 'tokenAuth');
+        await repositoryInterface.loadPrefs(type: String, key: 'tokenFirebase');
 
     if (resp != null) {
       print('HOME');
