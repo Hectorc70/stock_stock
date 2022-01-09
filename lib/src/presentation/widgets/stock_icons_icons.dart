@@ -26,4 +26,5 @@ class StockIcons {
   static const IconData programming = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData market = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData logout = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData calendar = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

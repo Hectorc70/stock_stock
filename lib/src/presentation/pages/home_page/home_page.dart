@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
+import 'package:stock_stock/src/presentation/pages/home_page/widgets/card_mount_sale.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -41,18 +42,23 @@ class HomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-                padding: const EdgeInsets.only(left: 30.0),
-                width: widthScreen * 0.80,
-                child: Text(
-                  'Hola ${userProvider.dataUser.username}, Bienvenido',
-                  style: Theme.of(context).textTheme.headline5,
-                ))
-          ],
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+              padding: const EdgeInsets.only(left: 30.0),
+              width: widthScreen * 0.80,
+              child: Text(
+                'Hola ${userProvider.dataUser.username}, Bienvenido',
+                style: Theme.of(context).textTheme.headline5,
+              )),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: cardSaleToday(context: context))
+        ],
       ),
     );
   }
