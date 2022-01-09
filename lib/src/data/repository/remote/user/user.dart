@@ -33,6 +33,28 @@ class ApiUser {
     }
   }
 
+  Future<List<dynamic>> getUserFirebase({required String idFirebase}) async {
+    Uri url = Uri.parse(baseURLAPI + 'users/user/$idFirebase');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Authorization': tokenInit},
+      );
+
+      if (response.statusCode == 200) {
+        final dataUTF8 = utf8.decode(response.bodyBytes);
+        final responseDecode = jsonDecode(dataUTF8);
+        UserModel model = UserModel.fromJson(responseDecode);
+        return [response.statusCode, model];
+      } else {
+        return [response.statusCode, jsonDecode(response.body)];
+      }
+    } catch (e) {
+      return [0, e.toString()];
+    }
+  }
+
   Future<List<dynamic>> checkUserForEmail({required String email}) async {
     Uri url = Uri.parse(baseURLAPI + 'users/user-check-for-email/');
 

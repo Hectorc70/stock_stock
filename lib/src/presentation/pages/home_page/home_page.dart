@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
 
@@ -8,6 +10,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       drawer: drawerMenu(context: context),
@@ -18,7 +22,7 @@ class HomePage extends StatelessWidget {
             onPressed: () => _scaffoldKey.currentState!.openDrawer(),
             icon: Icon(
               StockIcons.menu,
-              size: 35.0,
+              size: 30.0,
               color: Theme.of(context).colorScheme.secondary,
             )),
         actions: [
@@ -27,7 +31,7 @@ class HomePage extends StatelessWidget {
               child: Container(
                   width: 60.0,
                   height: 60.0,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           image: NetworkImage(
@@ -37,6 +41,19 @@ class HomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.only(left: 30.0),
+                width: widthScreen * 0.80,
+                child: Text(
+                  'Hola ${userProvider.dataUser.username}, Bienvenido',
+                  style: Theme.of(context).textTheme.headline5,
+                ))
+          ],
+        ),
+      ),
     );
   }
 }
