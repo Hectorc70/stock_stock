@@ -9,6 +9,6 @@ Map<String, WidgetBuilder> getApplicationRoutes(BuildContext context) {
     '/': (BuildContext context) => SplashPage.init(context),
     'loginPage': (BuildContext context) => const LoginPage(),
     'registerPage': (BuildContext context) => const RegisterPage(),
-    'homePage': (BuildContext context) => const HomePage(),
+    'homePage': (BuildContext context) =>  HomePage(),
   };
 }

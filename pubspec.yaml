@@ -58,3 +58,7 @@ flutter:
     - family: PoppinsBold
       fonts:
         - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+
+    - family: StockIcons
+      fonts:
+        - asset: assets/fonts/StockIcons.ttf
