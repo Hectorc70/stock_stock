@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
+import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,12 +12,12 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-            leading: IconButton(
+        leading: IconButton(
             onPressed: () {},
             icon: Icon(
-              Icons.menu,
-              size: 40.0,
-              color: Theme.of(context).colorScheme.primary,
+              StockIcons.menu,
+              size: 35.0,
+              color: Theme.of(context).colorScheme.secondary,
             )),
         actions: [
           TextButton(
