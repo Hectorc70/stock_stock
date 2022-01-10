@@ -36,7 +36,7 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.of(context).pushReplacementNamed('newShopPage');
     } else if (result[0] == 1) {
       userProvider.dataUser = result[1];
-
+      userProvider.selectShop = result[1].shops[0].split(':')[0];
       Navigator.of(context).pushReplacementNamed('homePage');
     } else {
       Navigator.of(context).pushReplacementNamed('loginPage');

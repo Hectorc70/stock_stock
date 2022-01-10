@@ -36,7 +36,7 @@ Widget drawerMenu({required BuildContext context}) {
                 child: Column(
           children: [
             Container(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.surface,
                 child: ListTile(
                   leading: Icon(
                     StockIcons.export_icon,
@@ -54,7 +54,7 @@ Widget drawerMenu({required BuildContext context}) {
               height: 20.0,
             ),
             Container(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.surface,
                 child: ListTile(
                   leading: Icon(
                     StockIcons.market,
@@ -72,7 +72,7 @@ Widget drawerMenu({required BuildContext context}) {
               height: 20.0,
             ),
             Container(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.surface,
                 child: ListTile(
                   leading: Icon(
                     StockIcons.programming,
@@ -90,7 +90,7 @@ Widget drawerMenu({required BuildContext context}) {
               height: 20.0,
             ),
             Container(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.surface,
                 child: ListTile(
                   leading: Icon(
                     StockIcons.logout,

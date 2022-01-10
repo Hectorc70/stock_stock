@@ -27,6 +27,7 @@ class BottomNavigatorCustomBar extends StatelessWidget {
               uiprovider.selectOption = index;
             } else if (index == 2 && uiprovider.selectOption != index) {
               uiprovider.selectOption = index;
+              Navigator.of(context).pushNamed('productsPage');
             } else if (index == 3 && uiprovider.selectOption != index) {
               uiprovider.selectOption = index;
               Navigator.of(context).pushNamed('shopsPage');

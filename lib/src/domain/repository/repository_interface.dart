@@ -39,4 +39,8 @@ abstract class RepositoryInterface {
 
   Future<List<dynamic>> createNewShop(
       {required String nameShop, required String idUser});
+
+
+  Future<List<dynamic>> getProductsForShop(
+      {required String idShop});
 }

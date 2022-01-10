@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
+import 'package:stock_stock/src/presentation/widgets/floatButton_bar.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
 import 'package:stock_stock/src/presentation/pages/home_page/widgets/card_mount_sale.dart';
 
@@ -62,19 +63,8 @@ class HomePage extends StatelessWidget {
                   child: cardSaleToday(context: context))
             ],
           ),
-          floatingActionButton: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {},
-            child: Container(
-              width: 50.0,
-              height: 50.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: Theme.of(context).colorScheme.primary),
-              child: Icon(Icons.add_rounded,
-                  color: Theme.of(context).colorScheme.onPrimary),
-            ),
-          ),
+          floatingActionButton:
+              floatButtonNavBar(actionButton: () {}, context: context),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomNavigatorCustomBar(),
