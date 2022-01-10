@@ -68,9 +68,17 @@ class MyApp extends StatelessWidget {
                 textTheme: const TextTheme(
                   bodyText1: TextStyle(fontFamily: 'Poppins', fontSize: 15),
                   bodyText2: TextStyle(fontFamily: 'Poppins', fontSize: 13),
-                  subtitle1: TextStyle(fontFamily: 'Poppins', fontSize: 15),
+                  subtitle1: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 15,
+                    color: Color(0xFF0490BF),
+                  ),
                   subtitle2: TextStyle(fontFamily: 'Poppins', fontSize: 13),
-                  headline6: TextStyle(fontFamily: 'Poppins', fontSize: 19),
+                  headline6: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 19,
+                    color: Color(0xFF0490BF),
+                  ),
                   headline5: TextStyle(
                     fontFamily: 'PoppinsBold',
                     fontSize: 23,

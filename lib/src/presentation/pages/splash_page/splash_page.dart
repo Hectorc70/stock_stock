@@ -31,8 +31,12 @@ class _SplashPageState extends State<SplashPage> {
     if (result[0] == 0) {
       provider.repositoryInterface.showSnack(
           context: context, textMessage: result[1], typeSnack: 'error');
+    } else if (result[0] == 1 && result[1].shops.length == 0) {
+      userProvider.dataUser = result[1];
+      Navigator.of(context).pushReplacementNamed('newShopPage');
     } else if (result[0] == 1) {
       userProvider.dataUser = result[1];
+
       Navigator.of(context).pushReplacementNamed('homePage');
     } else {
       Navigator.of(context).pushReplacementNamed('loginPage');

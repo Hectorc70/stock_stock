@@ -50,7 +50,7 @@ class BottomNavigatorCustomBar extends StatelessWidget {
                 icon: Icon(
                   StockIcons.market,
                 ),
-                label: 'Tiendas'),
+                label: 'Negocios'),
           ],
         ));
   }

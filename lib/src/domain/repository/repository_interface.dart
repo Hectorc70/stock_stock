@@ -36,4 +36,7 @@ abstract class RepositoryInterface {
       {required String email,
       required String username,
       required String idFirebase});
+
+  Future<List<dynamic>> createNewShop(
+      {required String nameShop, required String idUser});
 }
