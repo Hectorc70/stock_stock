@@ -5,6 +5,7 @@ class UserModel {
   String? email;
   String? idFirebase;
   String? tokenUser;
+  List<dynamic>? shops;
 
   UserModel(
       {this.id,
@@ -12,7 +13,8 @@ class UserModel {
       this.isActive,
       this.email,
       this.idFirebase,
-      this.tokenUser});
+      this.tokenUser,
+      this.shops});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json['id'],
@@ -21,5 +23,6 @@ class UserModel {
         isActive: json['is_active'],
         username: json['username'],
         tokenUser: json['token'],
+        shops: json['shops'],
       );
 }

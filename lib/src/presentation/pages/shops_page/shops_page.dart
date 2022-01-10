@@ -1,25 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_stock/src/domain/repository/repository_interface.dart';
+import 'package:stock_stock/src/presentation/pages/shops_page/shops_provider.dart';
+import 'package:stock_stock/src/presentation/pages/shops_page/widgets/card_shop.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
-import 'package:stock_stock/src/presentation/widgets/floatButton_bar.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
-import 'package:stock_stock/src/presentation/pages/home_page/widgets/card_mount_sale.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class ShopsPage extends StatelessWidget {
+  const ShopsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => ShopsProvider(
+          repositoryInterface: context.read<RepositoryInterface>()),
+      child: _Body(),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  _Body({Key? key}) : super(key: key);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final widthScreen = MediaQuery.of(context).size.width;
     return WillPopScope(
         child: Scaffold(
           key: _scaffoldKey,
-          drawer: drawerMenu(context: context),
           appBar: AppBar(
+            title: Text(
+              'Negocios',
+              style: Theme.of(context).textTheme.headline5,
+            ),
             elevation: 0.0,
             centerTitle: true,
             leading: IconButton(
@@ -44,29 +60,22 @@ class HomePage extends StatelessWidget {
             ],
             backgroundColor: Theme.of(context).colorScheme.background,
           ),
+          drawer: drawerMenu(context: context),
           backgroundColor: Theme.of(context).colorScheme.background,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  width: widthScreen * 0.80,
-                  child: Text(
-                    'Hola ${userProvider.dataUser.username}, Bienvenido',
-                    style: Theme.of(context).textTheme.headline5,
-                  )),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: cardSaleToday(context: context))
-            ],
-          ),
-          floatingActionButton:
-              floatButtonNavBar(actionButton: () {}, context: context),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          body: ListView.builder(
+              padding: const EdgeInsets.all(15.0),
+              itemCount: userProvider.dataUser.shops!.length,
+              itemBuilder: (_, i) {
+                if (userProvider.dataUser.shops!.length == 0) {
+                  return Center(
+                    child: Text('Sin Negocios'),
+                  );
+                }
+
+                return cardShop(
+                    context: context,
+                    nameShop: userProvider.dataUser.shops![i].split(':')[1]);
+              }),
           bottomNavigationBar: BottomNavigatorCustomBar(),
         ),
         onWillPop: () {

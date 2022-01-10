@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:stock_stock/src/domain/constants/assets_constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/splash_page/splash_provider.dart';
+import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage._();
@@ -12,7 +13,7 @@ class SplashPage extends StatefulWidget {
       create: (_) => SplashProvider(
           repositoryInterface: context.read<RepositoryInterface>()),
       builder: (_, __) {
-        return  SplashPage._();
+        return SplashPage._();
       },
     );
   }
@@ -24,9 +25,18 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   void _init() async {
     final provider = Provider.of<SplashProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final result = await provider.loadData();
 
-    if (result) {
+    if (result[0] == 0) {
+      provider.repositoryInterface.showSnack(
+          context: context, textMessage: result[1], typeSnack: 'error');
+    } else if (result[0] == 1 && result[1].shops.length == 0) {
+      userProvider.dataUser = result[1];
+      Navigator.of(context).pushReplacementNamed('newShopPage');
+    } else if (result[0] == 1) {
+      userProvider.dataUser = result[1];
+      userProvider.selectShop = result[1].shops[0].split(':')[0];
       Navigator.of(context).pushReplacementNamed('homePage');
     } else {
       Navigator.of(context).pushReplacementNamed('loginPage');

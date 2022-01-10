@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/data/repository/local/translate_errors_firebase.dart';
+import 'package:stock_stock/src/data/repository/remote/product/product.dart';
+import 'package:stock_stock/src/data/repository/remote/shop/shop.dart';
 import 'package:stock_stock/src/data/repository/remote/user/user.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 
@@ -197,5 +199,16 @@ class RepositoryImplementation implements RepositoryInterface {
     final resp = await ApiUser()
         .createUser(email: email, idFirebase: idFirebase, username: username);
     return resp;
+  }
+
+  @override
+  Future<List<dynamic>> createNewShop(
+      {required String nameShop, required String idUser}) async {
+    return await ApiShop().createShop(nameShop: nameShop, user: idUser);
+  }
+
+  @override
+  Future<List<dynamic>> getProductsForShop({required String idShop}) async {
+    return await ApiProduct().getProducts(idShop: idShop);
   }
 }
