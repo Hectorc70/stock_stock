@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/data/repository/repository_implementation.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
@@ -15,7 +16,11 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  MobileAds.instance.initialize();
   await PreferencesUser().initiPrefs();
+  RequestConfiguration configuration =
+      RequestConfiguration(testDeviceIds: ['57427CEC31515F00F5DB03F1B5D94FC5']);
+  MobileAds.instance.updateRequestConfiguration(configuration);
   runApp(const MyApp());
 }
 

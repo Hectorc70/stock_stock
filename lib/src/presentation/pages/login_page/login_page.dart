@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_stock/src/domain/constants/assets_constants.dart';
+import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/login_page/login_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/button_primary.dart';
@@ -22,6 +24,14 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final BannerAd myBanner = BannerAd(
+      adUnitId: idBanner,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    myBanner.load();
+
     final widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -115,6 +125,12 @@ class LoginPage extends StatelessWidget {
           ),
         ],
       )),
+      bottomNavigationBar: Container(
+        alignment: Alignment.center,
+        child: AdWidget(ad: myBanner),
+        width: myBanner.size.width.toDouble(),
+        height: myBanner.size.height.toDouble(),
+      ),
     );
   }
 }

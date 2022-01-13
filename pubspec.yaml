@@ -30,6 +30,7 @@ dependencies:
   shimmer: ^2.0.0
   intl: ^0.17.0 #Fechas
   url_launcher: ^6.0.0 #abrir aplicaciones
+  google_mobile_ads: ^1.0.1
 
 dev_dependencies:
   flutter_test:
