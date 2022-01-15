@@ -31,6 +31,7 @@ dependencies:
   intl: ^0.17.0 #Fechas
   url_launcher: ^6.0.0 #abrir aplicaciones
   google_mobile_ads: ^1.0.1
+  select_form_field: ^2.2.0
 
 dev_dependencies:
   flutter_test:

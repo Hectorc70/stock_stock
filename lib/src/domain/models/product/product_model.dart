@@ -13,6 +13,25 @@ class ProductModel {
       pieces: json['pieces'],
       price: json['price'],
       shopId: json['shop']);
+  Map<String, dynamic> fromJsonToSelectItem(Map<String, dynamic> json) {
+    return {
+      'icon': null,
+      'label': json['name'],
+      'value': json['id'],
+    };
+  }
+
+  Map<String, ProductModel> fromJsonToMapSelect(List<dynamic> json) {
+    Map<String, ProductModel> items = {};
+
+    for (final item in json) {
+      ProductModel prod = ProductModel.fromJson(item);
+
+      items[prod.id.toString()] = prod;
+    }
+
+    return items;
+  }
 
   Map<String, dynamic> toJson() {
     return {

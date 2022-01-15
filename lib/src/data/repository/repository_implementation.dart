@@ -4,9 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/data/repository/local/translate_errors_firebase.dart';
 import 'package:stock_stock/src/data/repository/remote/product/product.dart';
+import 'package:stock_stock/src/data/repository/remote/sale/sale.dart';
 import 'package:stock_stock/src/data/repository/remote/shop/shop.dart';
 import 'package:stock_stock/src/data/repository/remote/user/user.dart';
 import 'package:stock_stock/src/domain/models/product/product_model.dart';
+import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 
 class RepositoryImplementation implements RepositoryInterface {
@@ -241,5 +243,26 @@ class RepositoryImplementation implements RepositoryInterface {
   @override
   Future<List<dynamic>> getProductsForShop({required String idShop}) async {
     return await ApiProduct().getProducts(idShop: idShop);
+  }
+
+  @override
+  Future<List<dynamic>> getProductForId({required String idProduct}) async {
+    return await ApiProduct().getProduct(idProduct: idProduct);
+  }
+
+  @override
+  Future<List<dynamic>> createSale({required SaleModel model}) async {
+    return await ApiSale().newSale(model: model);
+  }
+
+  @override
+  Future<List<dynamic>> getSalesForShop({required String idShop}) async {
+    return await ApiSale().getSales(idShop: idShop);
+  }
+
+  @override
+  Future<List<dynamic>> getSalesForDate(
+      {required String idShop, required String date}) async {
+    return await ApiSale().getSalesForDate(shop: idShop, date: date);
   }
 }

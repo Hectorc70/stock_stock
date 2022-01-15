@@ -7,4 +7,13 @@ class SaleProvider extends ChangeNotifier {
   SaleProvider({
     required this.repositoryInterface,
   });
+
+  bool _isLoading = false;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool get isLoading => _isLoading;
 }

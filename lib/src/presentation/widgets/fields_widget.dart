@@ -1,12 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:select_form_field/select_form_field.dart';
 
 class CustomFormField extends StatelessWidget {
   String labelField = '';
   String hintField = '';
   TextEditingController controller;
-
+  bool isEnabled;
   double widthField;
 
   CustomFormField(
@@ -14,6 +15,7 @@ class CustomFormField extends StatelessWidget {
       required this.hintField,
       required this.controller,
       this.widthField = double.maxFinite,
+      this.isEnabled = true,
       Key? key})
       : super(key: key);
 
@@ -32,6 +34,7 @@ class CustomFormField extends StatelessWidget {
                 color: colorSecond, fontFamily: 'PoppinsLight', fontSize: 18.0),
           ),
           TextFormField(
+            enabled: isEnabled,
             style: TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
             controller: controller,
             decoration: InputDecoration(
@@ -203,7 +206,7 @@ class CustomFormPiecesField extends StatelessWidget {
   String labelField = '';
   String hintField = '';
   TextEditingController controller;
-
+  void Function(String)? functionOnChanged;
   double widthField;
 
   CustomFormPiecesField(
@@ -211,6 +214,7 @@ class CustomFormPiecesField extends StatelessWidget {
       required this.hintField,
       required this.controller,
       this.widthField = double.maxFinite,
+      this.functionOnChanged,
       Key? key})
       : super(key: key);
 
@@ -232,6 +236,7 @@ class CustomFormPiecesField extends StatelessWidget {
             style: TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
             controller: controller,
             keyboardType: TextInputType.number,
+            onChanged: functionOnChanged,
             decoration: InputDecoration(
                 hintText: hintField,
                 hintStyle: const TextStyle(
@@ -254,6 +259,9 @@ class CustomFormPiecesField extends StatelessWidget {
               if (value == '' || value == null) {
                 return 'Este campo es requerido';
               }
+              if (value == '0' || value == 0) {
+                return 'la cantidad debe ser mayor a 0';
+              }
 
               return null;
             },
@@ -261,5 +269,70 @@ class CustomFormPiecesField extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class FieldSelectForm extends StatelessWidget {
+  FieldSelectForm(
+      {required this.hintTextC,
+      required this.labelTextInput,
+      required this.controllerField,
+      required this.items,
+      this.functionOnChanged,
+      this.widthField = double.maxFinite,
+      this.typeDrop = SelectFormFieldType.dialog,
+      Key? key})
+      : super(key: key);
+
+  final hintTextC;
+  final labelTextInput;
+  final controllerField;
+  void Function(String)? functionOnChanged;
+  final items;
+  SelectFormFieldType typeDrop;
+  double widthField;
+
+  @override
+  Widget build(BuildContext context) {
+    Color colorSecond = Theme.of(context).colorScheme.secondary;
+    return Container(
+        width: widthField,
+        margin: const EdgeInsets.only(top: 10.0),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            labelTextInput,
+            style: TextStyle(
+                color: colorSecond, fontFamily: 'PoppinsLight', fontSize: 18.0),
+          ),
+          SelectFormField(
+              onChanged: functionOnChanged,
+              controller: controllerField,
+              hintText: hintTextC,
+              dialogCancelBtn: 'Cancelar',
+              dialogTitle: labelTextInput,
+              dialogSearchHint: 'Buscar',
+              enableSearch: true,
+              type: typeDrop,
+              style:
+                  TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
+              decoration: InputDecoration(
+                  fillColor: const Color(0xFFF8FDFF),
+                  filled: true,
+                  isDense: true,
+                  hintStyle: const TextStyle(
+                      color: Color(0xFF7FB3C5), fontFamily: 'Poppins'),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 12),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(width: 2.0, color: colorSecond)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(color: colorSecond)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(color: colorSecond))),
+              items: items)
+        ]));
   }
 }

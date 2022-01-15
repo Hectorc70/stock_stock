@@ -27,6 +27,58 @@ class ApiSale {
     }
   }
 
+  Future<List<dynamic>> getSales({
+    required String idShop,
+  }) async {
+    Uri url = Uri.parse(baseURLAPI + 'users/sales/$idShop');
+
+    try {
+      await loadToken();
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Token $tokenUser'},
+      );
+
+      if (response.statusCode == 200) {
+        final dataUTF8 = utf8.decode(response.bodyBytes);
+        final responseDecode = jsonDecode(dataUTF8) as List;
+        List<SaleModel> sales =
+            responseDecode.map((json) => SaleModel.fromJson(json)).toList();
+        return [response.statusCode, sales];
+      } else {
+        return [response.statusCode, response.reasonPhrase];
+      }
+    } catch (e) {
+      return [0, e.toString()];
+    }
+  }
+
+  Future<List<dynamic>> getSalesForDate({
+    required String date,
+    required String shop,
+  }) async {
+    Uri url = Uri.parse(baseURLAPI + 'users/sales-for-date/');
+
+    try {
+      await loadToken();
+      final response = await http.post(url,
+          headers: {'Authorization': 'Token $tokenUser'},
+          body: {'date': date, 'shop': shop});
+
+      if (response.statusCode == 200) {
+        final dataUTF8 = utf8.decode(response.bodyBytes);
+        final responseDecode = jsonDecode(dataUTF8) as List;
+        final sales =
+            responseDecode[0].map((json) => SaleModel.fromJson(json)).toList();
+        return [response.statusCode, sales, responseDecode[1]];
+      } else {
+        return [response.statusCode, response.reasonPhrase];
+      }
+    } catch (e) {
+      return [0, e.toString()];
+    }
+  }
+
   Future<void> loadToken() async {
     PreferencesUser prefs = PreferencesUser();
     tokenUser = await prefs.loadPrefs(type: String, key: 'tokenUser');

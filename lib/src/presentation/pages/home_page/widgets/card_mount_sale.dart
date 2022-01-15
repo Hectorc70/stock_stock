@@ -3,6 +3,7 @@ import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
 
 Widget cardSaleToday({
   required BuildContext context,
+  required String total,
 }) {
   Color shadowColor = const Color(0x82043A4D);
   final widthScreen = MediaQuery.of(context).size.width;
@@ -63,7 +64,7 @@ Widget cardSaleToday({
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    '\$ 30.00 MXN',
+                    '\$ $total MXN',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontFamily: 'PoppinsBold',

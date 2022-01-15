@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/sales_page/sales_provider.dart';
+import 'package:stock_stock/src/presentation/pages/sales_page/widgets/shimmer_sales.dart';
+import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/card_data.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
@@ -23,20 +27,62 @@ class SalesPage extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends StatefulWidget {
   _Body({Key? key}) : super(key: key);
+
+  @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _init() async {
+    final provider = Provider.of<SalesProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    provider.isLoading = true;
+    final result = await provider.repositoryInterface
+        .getSalesForShop(idShop: userProvider.selectShop);
+    provider.isLoading = false;
+    if (result[0] == 200) {
+      provider.sales = result[1];
+    } else {
+      provider.repositoryInterface.showSnack(
+          context: context, textMessage: result[1], typeSnack: 'error');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _init();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SalesProvider>(context);
+
+    if (provider.isLoading) {
+      return const ShimmerSales();
+    }
+
+    final BannerAd myBanner = BannerAd(
+      adUnitId: idBanner,
+      size: AdSize.fullBanner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    myBanner.load();
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: drawerMenu(context: context),
       appBar: AppBar(
         title: Text(
-          'Productos',
+          'Ventas',
           style: Theme.of(context).textTheme.headline5,
         ),
         elevation: 0.0,
@@ -66,8 +112,7 @@ class _Body extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Builder(builder: (_) {
         if (provider.sales.length == 0) {
-          return Center(
-              child: Column(
+          return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -79,8 +124,15 @@ class _Body extends StatelessWidget {
                 'Crea una',
                 style: Theme.of(context).textTheme.headline6,
               ),
+              const Spacer(),
+              Container(
+                alignment: Alignment.center,
+                child: AdWidget(ad: myBanner),
+                width: myBanner.size.width.toDouble(),
+                height: myBanner.size.height.toDouble(),
+              )
             ],
-          ));
+          );
         }
 
         return ListView.builder(

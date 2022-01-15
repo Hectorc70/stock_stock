@@ -33,12 +33,15 @@ class _ProductsPageState extends State<ProductsPage> {
   void _init() async {
     final provider = Provider.of<ProductsProvider>(context, listen: false);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+
     provider.isLoading = true;
     final result =
         await ApiProduct().getProducts(idShop: userProvider.selectShop);
     provider.isLoading = false;
     if (result[0] == 200) {
       provider.products = result[1];
+      userProvider.productsItemsSelect = result[2];
+      userProvider.productsMapSelect = result[3];
     } else {
       provider.repositoryInterface.showSnack(
           context: context, textMessage: result[1], typeSnack: 'error');
