@@ -6,16 +6,15 @@ import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/models/shop/shop_model.dart';
 
 class ApiShop {
+  String token = '';
+
   Future<List<dynamic>> createShop(
       {required String nameShop, required String user}) async {
     Uri url = Uri.parse(baseURLAPI + 'users/shop/');
-
-    PreferencesUser prefs = PreferencesUser();
-    final token = await prefs.loadPrefs(type: String, key: 'tokenUser');
-
+    await loadToken();
     try {
       final response = await http.post(url,
-          headers: {'Authorization': tokenInit},
+          headers: {'Authorization': 'Token $token'},
           body: {"name": nameShop, "user": user});
 
       if (response.statusCode == 201) {
@@ -29,5 +28,10 @@ class ApiShop {
     } catch (e) {
       return [0, e.toString()];
     }
+  }
+
+  Future<void> loadToken() async {
+    PreferencesUser prefs = PreferencesUser();
+    token = await prefs.loadPrefs(type: String, key: 'tokenUser');
   }
 }

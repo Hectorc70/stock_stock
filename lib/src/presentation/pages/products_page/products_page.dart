@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_stock/src/data/repository/remote/product/product.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
-import 'package:stock_stock/src/presentation/products_page/products_provider.dart';
-import 'package:stock_stock/src/presentation/products_page/widgets/shimmer_products_page.dart';
+import 'package:stock_stock/src/presentation/pages/products_page/products_provider.dart';
+import 'package:stock_stock/src/presentation/pages/products_page/widgets/shimmer_products_page.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/card_data.dart';
@@ -92,19 +92,42 @@ class _ProductsPageState extends State<ProductsPage> {
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          itemCount: provider.products.length,
-          itemBuilder: (_, i) {
-            return CardCustomPreview(
-              title: provider.products[i].name!,
-              subtitle: provider.products[i].price.toString(),
-              leadingText: provider.products[i].pieces.toString(),
-            );
-          }),
+      body: Builder(builder: (_) {
+        if (provider.products.length == 0) {
+          return Center(
+              child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Sin productos',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Text(
+                'Crea uno',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ],
+          ));
+        }
+
+        return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            itemCount: provider.products.length,
+            itemBuilder: (_, i) {
+              return CardCustomPreview(
+                title: provider.products[i].name!,
+                subtitle: provider.products[i].price.toString(),
+                leadingText: provider.products[i].pieces.toString(),
+              );
+            });
+      }),
       bottomNavigationBar: const BottomNavigatorCustomBar(),
-      floatingActionButton:
-          floatButtonNavBar(actionButton: () {}, context: context),
+      floatingActionButton: floatButtonNavBar(
+          actionButton: () {
+            Navigator.of(context).pushNamed('productPage');
+          },
+          context: context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

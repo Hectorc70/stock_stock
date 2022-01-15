@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-messageOK({required BuildContext context, required String msg}) {
+messageOK(
+    {required BuildContext context,
+    required String msg,
+    final VoidCallback? action}) {
+  VoidCallback _action = () => Navigator.of(context).pop();
+
+  if (action != null) {
+    _action = action;
+  }
   final widthScreen = MediaQuery.of(context).size.width;
 
   Color colorHeader = Theme.of(context).colorScheme.background;
@@ -49,9 +57,7 @@ messageOK({required BuildContext context, required String msg}) {
     actionsAlignment: MainAxisAlignment.center,
     actions: [
       TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: _action,
           child: Text('Aceptar',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,

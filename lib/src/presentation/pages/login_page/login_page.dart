@@ -40,6 +40,13 @@ class __BodyState extends State<_Body> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
+  void dispose() {
+    controllerEmail.dispose();
+    controllerPassword.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(
       context,

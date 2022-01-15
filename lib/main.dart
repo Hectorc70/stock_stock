@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
     ]);
     return MultiProvider(
         providers: [
-          
           Provider<RepositoryInterface>(
             create: (_) => RepositoryImplementation(),
           ),
@@ -72,8 +71,16 @@ class MyApp extends StatelessWidget {
                     onError: Colors.red.shade300,
                     brightness: Brightness.light),
                 textTheme: const TextTheme(
-                  bodyText1: TextStyle(fontFamily: 'Poppins', fontSize: 15),
-                  bodyText2: TextStyle(fontFamily: 'Poppins', fontSize: 13),
+                  bodyText1: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 15,
+                    color: Color(0xFF0490BF),
+                  ),
+                  bodyText2: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 13,
+                    color: Color(0xFF0490BF),
+                  ),
                   subtitle1: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 15,

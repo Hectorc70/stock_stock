@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/drawer_menu.dart';
@@ -15,6 +17,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     final widthScreen = MediaQuery.of(context).size.width;
+    final BannerAd myBanner = BannerAd(
+      adUnitId: idBanner,
+      size: AdSize.fullBanner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    myBanner.load();
     return WillPopScope(
         child: Scaffold(
           key: _scaffoldKey,
@@ -60,7 +69,14 @@ class HomePage extends StatelessWidget {
               ),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: cardSaleToday(context: context))
+                  child: cardSaleToday(context: context)),
+              const Spacer(),
+              Container(
+                alignment: Alignment.center,
+                child: AdWidget(ad: myBanner),
+                width: myBanner.size.width.toDouble(),
+                height: myBanner.size.height.toDouble(),
+              )
             ],
           ),
           floatingActionButton:

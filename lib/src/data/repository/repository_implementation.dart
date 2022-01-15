@@ -6,6 +6,7 @@ import 'package:stock_stock/src/data/repository/local/translate_errors_firebase.
 import 'package:stock_stock/src/data/repository/remote/product/product.dart';
 import 'package:stock_stock/src/data/repository/remote/shop/shop.dart';
 import 'package:stock_stock/src/data/repository/remote/user/user.dart';
+import 'package:stock_stock/src/domain/models/product/product_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 
 class RepositoryImplementation implements RepositoryInterface {
@@ -229,6 +230,12 @@ class RepositoryImplementation implements RepositoryInterface {
   Future<List<dynamic>> createNewShop(
       {required String nameShop, required String idUser}) async {
     return await ApiShop().createShop(nameShop: nameShop, user: idUser);
+  }
+
+  @override
+  Future<List<dynamic>> createProductForShop(
+      {required ProductModel productModel}) async {
+    return await ApiProduct().newProduct(model: productModel);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:stock_stock/src/domain/models/product/product_model.dart';
 
 abstract class RepositoryInterface {
   void showSnack(
@@ -41,6 +42,10 @@ abstract class RepositoryInterface {
 
   Future<List<dynamic>> createNewShop(
       {required String nameShop, required String idUser});
+
+
+
+  Future<List<dynamic>> createProductForShop({required ProductModel productModel});
 
   Future<List<dynamic>> getProductsForShop({required String idShop});
 }
