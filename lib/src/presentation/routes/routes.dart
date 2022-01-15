@@ -5,6 +5,8 @@ import 'package:stock_stock/src/presentation/pages/new_shop_page/new_shop_page.d
 import 'package:stock_stock/src/presentation/pages/product_form/product_page.dart';
 import 'package:stock_stock/src/presentation/pages/products_page/products_page.dart';
 import 'package:stock_stock/src/presentation/pages/register_page/register_page.dart';
+import 'package:stock_stock/src/presentation/pages/sale_page/sale_page.dart';
+import 'package:stock_stock/src/presentation/pages/sales_page/sales_page.dart';
 import 'package:stock_stock/src/presentation/pages/shops_page/shops_page.dart';
 import 'package:stock_stock/src/presentation/pages/splash_page/splash_page.dart';
 
@@ -18,5 +20,7 @@ Map<String, WidgetBuilder> getApplicationRoutes(BuildContext context) {
     'shopsPage': (BuildContext context) => const ShopsPage(),
     'productsPage': (BuildContext context) => ProductsPage.init(context),
     'productPage': (BuildContext context) => const ProductPage(),
+    'salesPage': (BuildContext context) => const SalesPage(),
+    'salePage': (BuildContext context) => const SalePage()
   };
 }
