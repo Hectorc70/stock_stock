@@ -47,4 +47,8 @@ class PreferencesUser {
         return _prefs.getString(key);
     }
   }
+
+  Future removePreferences() async {
+    _prefs.clear();
+  }
 }

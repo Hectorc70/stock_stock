@@ -16,7 +16,7 @@ abstract class RepositoryInterface {
       required String password,
       required String username});
 
-  Future<List<dynamic>> loginUserForEmail(
+  Future<List<dynamic>> loginFirebaseWithEmail(
       {required String email, required String password});
 
   Future<List<dynamic>> changePasswordFirebase({required String email});
@@ -37,10 +37,10 @@ abstract class RepositoryInterface {
       required String username,
       required String idFirebase});
 
+  Future<List<dynamic>> getDataUserFirebase({required String idFirebase});
+
   Future<List<dynamic>> createNewShop(
       {required String nameShop, required String idUser});
 
-
-  Future<List<dynamic>> getProductsForShop(
-      {required String idShop});
+  Future<List<dynamic>> getProductsForShop({required String idShop});
 }

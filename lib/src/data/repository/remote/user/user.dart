@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:stock_stock/src/domain/models/user/user_model.dart';
@@ -48,7 +49,7 @@ class ApiUser {
         UserModel model = UserModel.fromJson(responseDecode);
         return [response.statusCode, model];
       } else {
-        return [response.statusCode, jsonDecode(response.body)];
+        return [response.statusCode, response.reasonPhrase];
       }
     } catch (e) {
       return [0, e.toString()];

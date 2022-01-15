@@ -85,18 +85,28 @@ class RepositoryImplementation implements RepositoryInterface {
   }
 
   @override
-  Future<List<dynamic>> loginUserForEmail(
+  Future<List<dynamic>> loginFirebaseWithEmail(
       {required String email, required String password}) async {
     final prefs = PreferencesUser();
-
     try {
-      final resp = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final respCheck = await checkUserForEmail(email: email);
+      if (respCheck[0] == 200) {
+        final resp = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        String? idUser = resp.user?.uid;
+        final respData = await getDataUserFirebase(idFirebase: idUser!);
 
-      String? idUser = resp.user?.uid;
-      return [1, idUser ?? ''];
+        if (respData[0] == 200) {
+          prefs.savePrefs(type: String, key: 'tokenFirebase', value: idUser);
+          return [1, respData[1]];
+        } else {
+          return [0, respData[1]];
+        }
+      } else {
+        return [0, 'No se encontro cuenta con email seleccionado'];
+      }
     } on FirebaseAuthException catch (e) {
       String errorDesc = errorConvert(e.code);
 
@@ -133,15 +143,22 @@ class RepositoryImplementation implements RepositoryInterface {
   @override
   Future<List<dynamic>> loginFirebaseWithGoogle(
       {required OAuthCredential credential, required String email}) async {
+    final prefs = PreferencesUser();
     try {
       final respCheck = await checkUserForEmail(email: email);
 
-      if (respCheck == 200) {
+      if (respCheck[0] == 200) {
         final resp =
             await FirebaseAuth.instance.signInWithCredential(credential);
 
         String? idUser = resp.user?.uid;
-        return [1, idUser];
+        final respData = await getDataUserFirebase(idFirebase: idUser!);
+        if (respData[0] == 200) {
+          prefs.savePrefs(type: String, key: 'tokenFirebase', value: idUser);
+          return [1, respData[1]];
+        } else {
+          return [0, respData[1]];
+        }
       } else {
         return [0, 'No se encontro cuenta con email seleccionado'];
       }
@@ -198,6 +215,13 @@ class RepositoryImplementation implements RepositoryInterface {
       required String idFirebase}) async {
     final resp = await ApiUser()
         .createUser(email: email, idFirebase: idFirebase, username: username);
+    return resp;
+  }
+
+  @override
+  Future<List<dynamic>> getDataUserFirebase(
+      {required String idFirebase}) async {
+    final resp = await ApiUser().getUserFirebase(idFirebase: idFirebase);
     return resp;
   }
 

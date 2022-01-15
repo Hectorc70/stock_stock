@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/presentation/widgets/login_header_widget.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
 
@@ -102,7 +103,12 @@ Widget drawerMenu({required BuildContext context}) {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    PreferencesUser prefs = PreferencesUser();
+                    prefs.removePreferences();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, 'loginPage', (Route<dynamic> route) => false);
+                  },
                 ))
           ],
         )))
