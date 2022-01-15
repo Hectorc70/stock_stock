@@ -105,47 +105,65 @@ class __BodyState extends State<_Body> {
             backgroundColor: Theme.of(context).colorScheme.background,
           ),
           backgroundColor: Theme.of(context).colorScheme.background,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  width: widthScreen * 0.80,
-                  child: Text(
-                    'Hola ${userProvider.dataUser.username}, Bienvenido',
-                    style: Theme.of(context).textTheme.headline5,
-                  )),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: cardSaleToday(
-                      context: context,
-                      total: homeProvider.totalToday.toString())),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Expanded(
-                  child: ListView.builder(
+          body: RefreshIndicator(
+              child: Column(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.only(left: 30.0),
+                      width: widthScreen * 0.80,
+                      child: Text(
+                        'Hola ${userProvider.dataUser.username}, Bienvenido',
+                        style: Theme.of(context).textTheme.headline5,
+                      )),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      itemCount: homeProvider.sales.length,
-                      itemBuilder: (_, i) {
-                        return CardCustomPreview(
-                          title: homeProvider.sales[i].productName!,
-                          subtitle: homeProvider.sales[i].total.toString(),
-                          leadingText: homeProvider.sales[i].pieces.toString(),
-                        );
-                      })),
-              const Spacer(),
-              Container(
-                alignment: Alignment.center,
-                child: AdWidget(ad: myBanner),
-                width: myBanner.size.width.toDouble(),
-                height: myBanner.size.height.toDouble(),
-              )
-            ],
-          ),
+                      child: cardSaleToday(
+                          context: context,
+                          homeProvider: homeProvider,
+                          date: homeProvider.date.toString(),
+                          total: homeProvider.totalToday.toString())),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Expanded(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          itemCount: homeProvider.sales.length,
+                          itemBuilder: (_, i) {
+                            return CardCustomPreview(
+                              title: homeProvider.sales[i].productName!,
+                              subtitle: homeProvider.sales[i].total.toString(),
+                              leadingText:
+                                  homeProvider.sales[i].pieces.toString(),
+                            );
+                          })),
+                  Container(
+                    alignment: Alignment.center,
+                    child: AdWidget(ad: myBanner),
+                    width: myBanner.size.width.toDouble(),
+                    height: myBanner.size.height.toDouble(),
+                  )
+                ],
+              ),
+              onRefresh: () async {
+                final resp = await homeProvider.repositoryInterface
+                    .getSalesForDate(
+                        idShop: userProvider.selectShop,
+                        date: homeProvider.date);
+
+                if (resp[0] == 200) {
+                  homeProvider.totalToday = resp[2];
+                  homeProvider.sales = resp[1];
+                } else {
+                  homeProvider.repositoryInterface.showSnack(
+                      context: context,
+                      textMessage: resp[1],
+                      typeSnack: 'error');
+                }
+              }),
           floatingActionButton: floatButtonNavBar(
               actionButton: () {
                 Navigator.of(context).pushNamed('salePage');

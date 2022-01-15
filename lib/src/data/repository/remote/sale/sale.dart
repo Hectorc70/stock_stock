@@ -19,6 +19,9 @@ class ApiSale {
 
       if (response.statusCode == 201) {
         return [response.statusCode, ''];
+      } else if (response.statusCode == 400 &&
+          jsonDecode(response.body).length > 0) {
+        return [response.statusCode, jsonDecode(response.body)['error']];
       } else {
         return [response.statusCode, response.reasonPhrase];
       }

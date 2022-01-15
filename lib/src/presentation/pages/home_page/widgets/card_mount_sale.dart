@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stock_stock/src/presentation/pages/home_page/home_provider.dart';
+import 'package:stock_stock/src/presentation/providers/user_provider.dart';
+import 'package:stock_stock/src/presentation/widgets/picker_calendar.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
 
 Widget cardSaleToday({
   required BuildContext context,
+  required String date,
   required String total,
+  required HomeProvider homeProvider,
 }) {
   Color shadowColor = const Color(0x82043A4D);
   final widthScreen = MediaQuery.of(context).size.width;
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
   return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
@@ -43,14 +50,35 @@ Widget cardSaleToday({
                     child: Row(
                       children: [
                         Text(
-                          'OCT/22/2021',
+                          date,
                           style: TextStyle(
                               fontFamily: 'PoppinsBold',
+                              fontSize: 16.0,
                               color: Theme.of(context).colorScheme.onPrimary),
                         ),
                         const Expanded(child: SizedBox()),
                         GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              final resp =
+                                  await showCustomCalendar(context: context);
+                              homeProvider.date = resp.toString().split(' ')[0];
+
+                              final respData = await homeProvider
+                                  .repositoryInterface
+                                  .getSalesForDate(
+                                      idShop: userProvider.selectShop,
+                                      date: homeProvider.date);
+
+                              if (respData[0] == 200) {
+                                homeProvider.totalToday = respData[2];
+                                homeProvider.sales = respData[1];
+                              } else {
+                                homeProvider.repositoryInterface.showSnack(
+                                    context: context,
+                                    textMessage: respData[1],
+                                    typeSnack: 'error');
+                              }
+                            },
                             child: Icon(
                               StockIcons.calendar,
                               color: Theme.of(context).colorScheme.onPrimary,

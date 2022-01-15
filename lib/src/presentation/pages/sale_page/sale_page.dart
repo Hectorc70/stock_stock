@@ -194,6 +194,11 @@ class __BodyState extends State<_Body> {
                           Navigator.of(context).pop();
                           _resetFields();
                         });
+                  } else if (resp[0] == 400) {
+                    saleProvider.repositoryInterface.showSnack(
+                        context: context,
+                        textMessage: resp[1],
+                        typeSnack: 'error');
                   } else {
                     saleProvider.repositoryInterface.showSnack(
                         context: context,
