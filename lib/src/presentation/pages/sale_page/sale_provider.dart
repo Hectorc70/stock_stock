@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 
-class SalesProvider extends ChangeNotifier {
+class SaleProvider extends ChangeNotifier {
   late RepositoryInterface repositoryInterface;
 
-  SalesProvider({
+  SaleProvider({
     required this.repositoryInterface,
   });
 
   bool _isLoading = false;
-  List<SaleModel> _sales = [];
+  SaleModel _saleDetail = SaleModel();
+  bool _isEdit = false;
 
-  set isLoading(bool data) {
-    _isLoading = data;
+  set isLoading(bool value) {
+    _isLoading = value;
     notifyListeners();
   }
 
   bool get isLoading => _isLoading;
 
-  set sales(List<SaleModel> data) {
-    _sales = data;
+  set saleDetail(SaleModel value) {
+    _saleDetail = value;
     notifyListeners();
   }
 
-  List<SaleModel> get sales => _sales;
+  SaleModel get saleDetail => _saleDetail;
 }

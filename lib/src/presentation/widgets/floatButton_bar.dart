@@ -4,7 +4,7 @@ Widget floatButtonNavBar(
     {required BuildContext context, required final VoidCallback actionButton}) {
   return GestureDetector(
     behavior: HitTestBehavior.translucent,
-    onTap: () {},
+    onTap: actionButton,
     child: Container(
       width: 50.0,
       height: 50.0,

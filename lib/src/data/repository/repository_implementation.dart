@@ -4,8 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/data/repository/local/translate_errors_firebase.dart';
 import 'package:stock_stock/src/data/repository/remote/product/product.dart';
+import 'package:stock_stock/src/data/repository/remote/sale/sale.dart';
 import 'package:stock_stock/src/data/repository/remote/shop/shop.dart';
 import 'package:stock_stock/src/data/repository/remote/user/user.dart';
+import 'package:stock_stock/src/domain/models/product/product_model.dart';
+import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 
 class RepositoryImplementation implements RepositoryInterface {
@@ -85,18 +88,28 @@ class RepositoryImplementation implements RepositoryInterface {
   }
 
   @override
-  Future<List<dynamic>> loginUserForEmail(
+  Future<List<dynamic>> loginFirebaseWithEmail(
       {required String email, required String password}) async {
     final prefs = PreferencesUser();
-
     try {
-      final resp = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final respCheck = await checkUserForEmail(email: email);
+      if (respCheck[0] == 200) {
+        final resp = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        String? idUser = resp.user?.uid;
+        final respData = await getDataUserFirebase(idFirebase: idUser!);
 
-      String? idUser = resp.user?.uid;
-      return [1, idUser ?? ''];
+        if (respData[0] == 200) {
+          prefs.savePrefs(type: String, key: 'tokenFirebase', value: idUser);
+          return [1, respData[1]];
+        } else {
+          return [0, respData[1]];
+        }
+      } else {
+        return [0, 'No se encontro cuenta con email seleccionado'];
+      }
     } on FirebaseAuthException catch (e) {
       String errorDesc = errorConvert(e.code);
 
@@ -133,15 +146,22 @@ class RepositoryImplementation implements RepositoryInterface {
   @override
   Future<List<dynamic>> loginFirebaseWithGoogle(
       {required OAuthCredential credential, required String email}) async {
+    final prefs = PreferencesUser();
     try {
       final respCheck = await checkUserForEmail(email: email);
 
-      if (respCheck == 200) {
+      if (respCheck[0] == 200) {
         final resp =
             await FirebaseAuth.instance.signInWithCredential(credential);
 
         String? idUser = resp.user?.uid;
-        return [1, idUser];
+        final respData = await getDataUserFirebase(idFirebase: idUser!);
+        if (respData[0] == 200) {
+          prefs.savePrefs(type: String, key: 'tokenFirebase', value: idUser);
+          return [1, respData[1]];
+        } else {
+          return [0, respData[1]];
+        }
       } else {
         return [0, 'No se encontro cuenta con email seleccionado'];
       }
@@ -202,13 +222,58 @@ class RepositoryImplementation implements RepositoryInterface {
   }
 
   @override
+  Future<List<dynamic>> getDataUserFirebase(
+      {required String idFirebase}) async {
+    final resp = await ApiUser().getUserFirebase(idFirebase: idFirebase);
+    return resp;
+  }
+
+  @override
   Future<List<dynamic>> createNewShop(
       {required String nameShop, required String idUser}) async {
     return await ApiShop().createShop(nameShop: nameShop, user: idUser);
   }
 
   @override
+  Future<List<dynamic>> createProductForShop(
+      {required ProductModel productModel}) async {
+    return await ApiProduct().newProduct(model: productModel);
+  }
+
+  @override
   Future<List<dynamic>> getProductsForShop({required String idShop}) async {
     return await ApiProduct().getProducts(idShop: idShop);
+  }
+
+  @override
+  Future<List<dynamic>> getProductForId({required String idProduct}) async {
+    return await ApiProduct().getProduct(idProduct: idProduct);
+  }
+
+  @override
+  Future<List<dynamic>> createSale({required SaleModel model}) async {
+    return await ApiSale().newSale(model: model);
+  }
+
+  @override
+  Future<List<dynamic>> getSalesForShop({required String idShop}) async {
+    return await ApiSale().getSales(idShop: idShop);
+  }
+
+  @override
+  Future<List<dynamic>> getSalesForDate(
+      {required String idShop, required String date}) async {
+    return await ApiSale().getSalesForDate(shop: idShop, date: date);
+  }
+
+  @override
+  Future<List<dynamic>> getSaleForId({required String idSale}) async {
+    return await ApiSale().getSaleForId(idSale: idSale);
+  }
+
+  @override
+  Future<List<dynamic>> updateUser(
+      {required Map<String, dynamic> data, required String idFirebase}) async {
+    return await ApiUser().updateDataUser(data: data, idFirebase: idFirebase);
   }
 }

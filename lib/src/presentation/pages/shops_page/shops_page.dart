@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/shops_page/shops_provider.dart';
 import 'package:stock_stock/src/presentation/pages/shops_page/widgets/card_shop.dart';
@@ -28,6 +30,14 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+
+    final BannerAd myBanner = BannerAd(
+      adUnitId: idBanner,
+      size: AdSize.fullBanner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    myBanner.load();
     return WillPopScope(
         child: Scaffold(
           key: _scaffoldKey,
@@ -62,20 +72,33 @@ class _Body extends StatelessWidget {
           ),
           drawer: drawerMenu(context: context),
           backgroundColor: Theme.of(context).colorScheme.background,
-          body: ListView.builder(
-              padding: const EdgeInsets.all(15.0),
-              itemCount: userProvider.dataUser.shops!.length,
-              itemBuilder: (_, i) {
-                if (userProvider.dataUser.shops!.length == 0) {
-                  return Center(
-                    child: Text('Sin Negocios'),
-                  );
-                }
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                    padding: const EdgeInsets.all(15.0),
+                    itemCount: userProvider.dataUser.shops!.length,
+                    itemBuilder: (_, i) {
+                      if (userProvider.dataUser.shops!.length == 0) {
+                        return Center(
+                          child: Text('Sin Negocios'),
+                        );
+                      }
 
-                return cardShop(
-                    context: context,
-                    nameShop: userProvider.dataUser.shops![i].split(':')[1]);
-              }),
+                      return cardShop(
+                          context: context,
+                          nameShop:
+                              userProvider.dataUser.shops![i].split(':')[1]);
+                    }),
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: AdWidget(ad: myBanner),
+                width: myBanner.size.width.toDouble(),
+                height: myBanner.size.height.toDouble(),
+              )
+            ],
+          ),
           bottomNavigationBar: BottomNavigatorCustomBar(),
         ),
         onWillPop: () {
