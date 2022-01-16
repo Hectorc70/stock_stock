@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_stock/src/data/repository/remote/product/product.dart';
+import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/products_page/products_provider.dart';
 import 'package:stock_stock/src/presentation/pages/products_page/widgets/shimmer_products_page.dart';
@@ -59,9 +61,18 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductsProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     if (provider.isLoading) {
       return const ProductsLoader();
     }
+
+    final BannerAd myBanner = BannerAd(
+      adUnitId: idBanner,
+      size: AdSize.fullBanner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    myBanner.load();
     return Scaffold(
       key: _scaffoldKey,
       drawer: drawerMenu(context: context),
@@ -95,7 +106,7 @@ class _ProductsPageState extends State<ProductsPage> {
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Builder(builder: (_) {
+      body: RefreshIndicator(child: Builder(builder: (_) {
         if (provider.products.length == 0) {
           return Center(
               child: Column(
@@ -110,20 +121,50 @@ class _ProductsPageState extends State<ProductsPage> {
                 'Crea uno',
                 style: Theme.of(context).textTheme.headline6,
               ),
+              const Spacer(),
+              Container(
+                alignment: Alignment.center,
+                child: AdWidget(ad: myBanner),
+                width: myBanner.size.width.toDouble(),
+                height: myBanner.size.height.toDouble(),
+              )
             ],
           ));
         }
 
-        return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            itemCount: provider.products.length,
-            itemBuilder: (_, i) {
-              return CardCustomPreview(
-                title: provider.products[i].name!,
-                subtitle: provider.products[i].price.toString(),
-                leadingText: provider.products[i].pieces.toString(),
-              );
-            });
+        return Column(
+          children: [
+            Expanded(
+                child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    itemCount: provider.products.length,
+                    itemBuilder: (_, i) {
+                      return CardCustomPreview(
+                        title: provider.products[i].name!,
+                        subtitle: provider.products[i].price.toString(),
+                        leadingText: provider.products[i].pieces.toString(),
+                      );
+                    })),
+            Container(
+              alignment: Alignment.center,
+              child: AdWidget(ad: myBanner),
+              width: myBanner.size.width.toDouble(),
+              height: myBanner.size.height.toDouble(),
+            )
+          ],
+        );
+      }), onRefresh: () async {
+        final result = await provider.repositoryInterface
+            .getProductsForShop(idShop: userProvider.selectShop);
+
+        if (result[0] == 200) {
+          provider.products = result[1];
+          userProvider.productsItemsSelect = result[2];
+          userProvider.productsMapSelect = result[3];
+        } else {
+          provider.repositoryInterface.showSnack(
+              context: context, textMessage: result[1], typeSnack: 'error');
+        }
       }),
       bottomNavigationBar: const BottomNavigatorCustomBar(),
       floatingActionButton: floatButtonNavBar(

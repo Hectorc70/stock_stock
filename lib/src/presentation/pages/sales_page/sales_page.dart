@@ -64,6 +64,7 @@ class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SalesProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     if (provider.isLoading) {
       return const ShimmerSales();
@@ -110,7 +111,7 @@ class _BodyState extends State<_Body> {
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Builder(builder: (_) {
+      body: RefreshIndicator(child: Builder(builder: (_) {
         if (provider.sales.length == 0) {
           return Column(
             mainAxisSize: MainAxisSize.max,
@@ -135,16 +136,37 @@ class _BodyState extends State<_Body> {
           );
         }
 
-        return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            itemCount: provider.sales.length,
-            itemBuilder: (_, i) {
-              return CardCustomPreview(
-                title: provider.sales[i].productName!,
-                subtitle: provider.sales[i].total.toString(),
-                leadingText: provider.sales[i].pieces.toString(),
-              );
-            });
+        return Column(
+          children: [
+            Expanded(
+                child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    itemCount: provider.sales.length,
+                    itemBuilder: (_, i) {
+                      return CardCustomPreview(
+                        title: provider.sales[i].productName!,
+                        subtitle: provider.sales[i].total.toString(),
+                        leadingText: provider.sales[i].pieces.toString(),
+                      );
+                    })),
+            Container(
+              alignment: Alignment.center,
+              child: AdWidget(ad: myBanner),
+              width: myBanner.size.width.toDouble(),
+              height: myBanner.size.height.toDouble(),
+            )
+          ],
+        );
+      }), onRefresh: () async {
+        final result = await provider.repositoryInterface
+            .getSalesForShop(idShop: userProvider.selectShop);
+
+        if (result[0] == 200) {
+          provider.sales = result[1];
+        } else {
+          provider.repositoryInterface.showSnack(
+              context: context, textMessage: result[1], typeSnack: 'error');
+        }
       }),
       bottomNavigationBar: const BottomNavigatorCustomBar(),
       floatingActionButton: floatButtonNavBar(
