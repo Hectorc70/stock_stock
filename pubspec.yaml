@@ -32,6 +32,8 @@ dependencies:
   url_launcher: ^6.0.0 #abrir aplicaciones
   google_mobile_ads: ^1.0.1
   select_form_field: ^2.2.0
+  awesome_notifications: ^0.6.16
+  firebase_messaging: ^10.0.7
 
 dev_dependencies:
   flutter_test:

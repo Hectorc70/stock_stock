@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:stock_stock/src/data/repository/local/local_notifications.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
+import 'package:stock_stock/src/data/repository/local/push_notifications.dart';
 import 'package:stock_stock/src/data/repository/repository_implementation.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/providers/nav_ui.dart';
@@ -21,6 +23,8 @@ void main() async {
   RequestConfiguration configuration =
       RequestConfiguration(testDeviceIds: ['57427CEC31515F00F5DB03F1B5D94FC5']);
   MobileAds.instance.updateRequestConfiguration(configuration);
+  await PushNotificationsService.initializeApp();
+  LocalNotifications.initializeApp();
   runApp(const MyApp());
 }
 

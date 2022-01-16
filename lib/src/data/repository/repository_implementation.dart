@@ -265,4 +265,10 @@ class RepositoryImplementation implements RepositoryInterface {
       {required String idShop, required String date}) async {
     return await ApiSale().getSalesForDate(shop: idShop, date: date);
   }
+
+  @override
+  Future<List<dynamic>> updateUser(
+      {required Map<String, dynamic> data, required String idFirebase}) async {
+    return await ApiUser().updateDataUser(data: data, idFirebase: idFirebase);
+  }
 }

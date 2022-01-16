@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_stock/src/domain/models/product/product_model.dart';
 import 'package:stock_stock/src/domain/models/user/user_model.dart';
@@ -5,9 +6,13 @@ import 'package:stock_stock/src/domain/models/user/user_model.dart';
 class UserProvider extends ChangeNotifier {
   UserModel _dataUser = UserModel();
   String _selectShop = '';
+  String _id_device = '';
   List<Map<String, dynamic>> _productsItemsSelect = [];
   Map<String, ProductModel> _productsMapSelect = {};
 
+  UserProvider() {
+    getTokenDevice();
+  }
   set dataUser(UserModel data) {
     _dataUser = data;
     notifyListeners();
@@ -35,4 +40,15 @@ class UserProvider extends ChangeNotifier {
   }
 
   Map<String, ProductModel> get productsMapSelect => _productsMapSelect;
+
+  set id_device(value) {
+    _id_device = value;
+    notifyListeners();
+  }
+
+  get id_device => _id_device;
+
+  Future<void> getTokenDevice() async {
+    id_device = await FirebaseMessaging.instance.getToken();
+  }
 }

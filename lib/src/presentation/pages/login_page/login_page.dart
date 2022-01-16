@@ -123,7 +123,11 @@ class __BodyState extends State<_Body> {
                                 type: String,
                                 key: 'tokenUser',
                                 value: userProvider.dataUser.tokenUser);
-
+                            loaderView(context);
+                            await loginProvider.repositoryInterface.updateUser(
+                                data: {'id_device': userProvider.id_device},
+                                idFirebase: userProvider.dataUser.idFirebase!);
+                            Loader.hide();
                             Navigator.of(context).pushNamed('homepage');
                           } else {
                             loginProvider.repositoryInterface.showSnack(
@@ -179,6 +183,11 @@ class __BodyState extends State<_Body> {
                               type: String,
                               key: 'tokenUser',
                               value: userProvider.dataUser.tokenUser);
+
+                          await loginProvider.repositoryInterface.updateUser(
+                              data: {'id_device': userProvider.id_device},
+                              idFirebase: userProvider.dataUser.idFirebase!);
+
                           Navigator.of(context).pushNamed('homePage');
                         } else {
                           loginProvider.repositoryInterface.showSnack(

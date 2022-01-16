@@ -53,4 +53,7 @@ abstract class RepositoryInterface {
   Future<List<dynamic>> getSalesForShop({required String idShop});
   Future<List<dynamic>> getSalesForDate(
       {required String idShop, required String date});
+
+  Future<List<dynamic>> updateUser(
+      {required Map<String, dynamic> data, required String idFirebase});
 }
