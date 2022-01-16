@@ -5,6 +5,7 @@ import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/home_page/home_provider.dart';
+import 'package:stock_stock/src/presentation/providers/nav_ui.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/card_data.dart';
@@ -68,6 +69,9 @@ class __BodyState extends State<_Body> {
     final userProvider = Provider.of<UserProvider>(context);
     final widthScreen = MediaQuery.of(context).size.width;
     final homeProvider = Provider.of<HomeProvider>(context);
+    final uiProvider = Provider.of<UiProvider>(
+      context,
+    );
     final BannerAd myBanner = BannerAd(
       adUnitId: idBanner,
       size: AdSize.fullBanner,
@@ -134,6 +138,12 @@ class __BodyState extends State<_Body> {
                           itemCount: homeProvider.sales.length,
                           itemBuilder: (_, i) {
                             return CardCustomPreview(
+                              actionCard: () {
+                                uiProvider.isFormSale = false;
+                                uiProvider.idSaleSelect =
+                                    homeProvider.sales[i].id!;
+                                Navigator.of(context).pushNamed('salePage');
+                              },
                               title: homeProvider.sales[i].productName!,
                               subtitle: homeProvider.sales[i].total.toString(),
                               leadingText:

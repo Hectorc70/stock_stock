@@ -267,6 +267,11 @@ class RepositoryImplementation implements RepositoryInterface {
   }
 
   @override
+  Future<List<dynamic>> getSaleForId({required String idSale}) async {
+    return await ApiSale().getSaleForId(idSale: idSale);
+  }
+
+  @override
   Future<List<dynamic>> updateUser(
       {required Map<String, dynamic> data, required String idFirebase}) async {
     return await ApiUser().updateDataUser(data: data, idFirebase: idFirebase);

@@ -140,6 +140,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     itemCount: provider.products.length,
                     itemBuilder: (_, i) {
                       return CardCustomPreview(
+                        actionCard: (){},
                         title: provider.products[i].name!,
                         subtitle: provider.products[i].price.toString(),
                         leadingText: provider.products[i].pieces.toString(),

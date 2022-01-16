@@ -5,11 +5,13 @@ class CardCustomPreview extends StatelessWidget {
   String title;
   String subtitle;
   String leadingText;
+  final VoidCallback actionCard;
 
   CardCustomPreview(
       {required this.title,
       required this.subtitle,
       required this.leadingText,
+      required this.actionCard,
       Key? key})
       : super(key: key);
 
@@ -27,6 +29,7 @@ class CardCustomPreview extends StatelessWidget {
         elevation: 0.0,
         color: Theme.of(context).colorScheme.surface,
         child: ListTile(
+          onTap: actionCard,
           leading: Container(
             alignment: AlignmentDirectional.center,
             decoration: BoxDecoration(
@@ -55,7 +58,8 @@ class CardCustomPreview extends StatelessWidget {
                 color: Theme.of(context).colorScheme.secondary,
                 fontSize: 20.0),
           ),
-          trailing: Icon(Icons.arrow_forward_ios_rounded, color:Theme.of(context).colorScheme.onSurface),
+          trailing: Icon(Icons.arrow_forward_ios_rounded,
+              color: Theme.of(context).colorScheme.onSurface),
         ),
       ),
     );

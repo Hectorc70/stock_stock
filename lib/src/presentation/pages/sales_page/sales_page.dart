@@ -5,6 +5,7 @@ import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/sales_page/sales_provider.dart';
 import 'package:stock_stock/src/presentation/pages/sales_page/widgets/shimmer_sales.dart';
+import 'package:stock_stock/src/presentation/providers/nav_ui.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/card_data.dart';
@@ -64,7 +65,10 @@ class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SalesProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context);
+    final uiProvider = Provider.of<UiProvider>(
+      context,
+    );
 
     if (provider.isLoading) {
       return const ShimmerSales();
@@ -83,7 +87,7 @@ class _BodyState extends State<_Body> {
       drawer: drawerMenu(context: context),
       appBar: AppBar(
         title: Text(
-          'Ventas',
+          'Historial de Ventas',
           style: Theme.of(context).textTheme.headline5,
         ),
         elevation: 0.0,
@@ -144,6 +148,11 @@ class _BodyState extends State<_Body> {
                     itemCount: provider.sales.length,
                     itemBuilder: (_, i) {
                       return CardCustomPreview(
+                        actionCard: () {
+                          uiProvider.isFormSale = false;
+                          uiProvider.idSaleSelect = provider.sales[i].id!;
+                          Navigator.of(context).pushNamed('salePage');
+                        },
                         title: provider.sales[i].productName!,
                         subtitle: provider.sales[i].total.toString(),
                         leadingText: provider.sales[i].pieces.toString(),

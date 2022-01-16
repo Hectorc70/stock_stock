@@ -82,6 +82,54 @@ class ApiSale {
     }
   }
 
+  Future<List<dynamic>> getSaleForId({
+    required String idSale,
+  }) async {
+    Uri url = Uri.parse(baseURLAPI + 'users/sale/$idSale');
+
+    try {
+      await loadToken();
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Token $tokenUser'},
+      );
+
+      if (response.statusCode == 200) {
+        final dataUTF8 = utf8.decode(response.bodyBytes);
+        final responseDecode = jsonDecode(dataUTF8);
+        final sale = SaleModel.fromJson(responseDecode);
+        return [response.statusCode, sale];
+      } else {
+        return [response.statusCode, response.reasonPhrase];
+      }
+    } catch (e) {
+      return [0, e.toString()];
+    }
+  }
+
+  Future<List<dynamic>> editSale({
+    required String idSale,
+    required Map<String, dynamic> data,
+  }) async {
+    Uri url = Uri.parse(baseURLAPI + 'users/sale/$idSale');
+
+    try {
+      await loadToken();
+      final response = await http.put(url,
+          headers: {'Authorization': 'Token $tokenUser'}, body: data);
+      if (response.statusCode == 200) {
+        final dataUTF8 = utf8.decode(response.bodyBytes);
+        final responseDecode = jsonDecode(dataUTF8);
+        final sale = SaleModel.fromJson(responseDecode);
+        return [response.statusCode, sale];
+      } else {
+        return [response.statusCode, response.reasonPhrase];
+      }
+    } catch (e) {
+      return [0, e.toString()];
+    }
+  }
+
   Future<void> loadToken() async {
     PreferencesUser prefs = PreferencesUser();
     tokenUser = await prefs.loadPrefs(type: String, key: 'tokenUser');
