@@ -149,7 +149,6 @@ class _BodyState extends State<_Body> {
                     itemBuilder: (_, i) {
                       return CardCustomPreview(
                         actionCard: () {
-                          uiProvider.isFormSale = false;
                           uiProvider.idSaleSelect = provider.sales[i].id!;
                           Navigator.of(context).pushNamed('salePage');
                         },
@@ -180,7 +179,7 @@ class _BodyState extends State<_Body> {
       bottomNavigationBar: const BottomNavigatorCustomBar(),
       floatingActionButton: floatButtonNavBar(
           actionButton: () {
-            Navigator.of(context).pushNamed('salePage');
+            Navigator.of(context).pushNamed('addSalePage');
           },
           context: context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

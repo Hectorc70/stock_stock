@@ -26,4 +26,11 @@ class SaleProvider extends ChangeNotifier {
   }
 
   SaleModel get saleDetail => _saleDetail;
+
+  set isEdit(bool value) {
+    _isEdit = value;
+    notifyListeners();
+  }
+
+  bool get isEdit => _isEdit;
 }

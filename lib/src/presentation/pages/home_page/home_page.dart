@@ -139,7 +139,6 @@ class __BodyState extends State<_Body> {
                           itemBuilder: (_, i) {
                             return CardCustomPreview(
                               actionCard: () {
-                                uiProvider.isFormSale = false;
                                 uiProvider.idSaleSelect =
                                     homeProvider.sales[i].id!;
                                 Navigator.of(context).pushNamed('salePage');
@@ -176,7 +175,7 @@ class __BodyState extends State<_Body> {
               }),
           floatingActionButton: floatButtonNavBar(
               actionButton: () {
-                Navigator.of(context).pushNamed('salePage');
+                Navigator.of(context).pushNamed('addSalePage');
               },
               context: context),
           floatingActionButtonLocation:

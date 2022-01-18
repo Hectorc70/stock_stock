@@ -48,9 +48,13 @@ class __BodyState extends State<_Body> {
     final saleProvider = Provider.of<SaleProvider>(context, listen: false);
     final uiProvider = Provider.of<UiProvider>(context, listen: false);
 
-    if (uiProvider.isFormSale) {
+    saleProvider.isLoading = true;
+    final result = await saleProvider.repositoryInterface
+        .getSaleForId(idSale: uiProvider.idSaleSelect.toString());
+
+    if (result[0] == 200) {
+      saleProvider.saleDetail = result[1];
       if (userProvider.productsItemsSelect.length == 0) {
-        saleProvider.isLoading = true;
         final result = await saleProvider.repositoryInterface
             .getProductsForShop(idShop: userProvider.selectShop);
         saleProvider.isLoading = false;
@@ -64,19 +68,11 @@ class __BodyState extends State<_Body> {
       }
       controllerPieces.text = '1';
     } else {
-      saleProvider.isLoading = true;
-      final result = await saleProvider.repositoryInterface
-          .getSaleForId(idSale: uiProvider.idSaleSelect.toString());
-      saleProvider.isLoading = false;
-
-      if (result[0] == 200) {
-        saleProvider.saleDetail = result[1];
-      } else {
-        Navigator.of(context).pop();
-        saleProvider.repositoryInterface.showSnack(
-            context: context, textMessage: result[1], typeSnack: 'error');
-      }
+      Navigator.of(context).pop();
+      saleProvider.repositoryInterface.showSnack(
+          context: context, textMessage: result[1], typeSnack: 'error');
     }
+    saleProvider.isLoading = false;
   }
 
   @override
@@ -102,7 +98,7 @@ class __BodyState extends State<_Body> {
     final saleProvider = Provider.of<SaleProvider>(context);
     final uiProvider = Provider.of<UiProvider>(context);
 
-    if (!saleProvider.isLoading && uiProvider.isFormSale) {
+    if (!saleProvider.isLoading && saleProvider.isEdit) {
       final BannerAd myBanner = BannerAd(
         adUnitId: idBanner,
         size: AdSize.fullBanner,
@@ -114,7 +110,7 @@ class __BodyState extends State<_Body> {
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           title: Text(
-            'Crear Venta',
+            'Editar Venta',
             style: Theme.of(context).textTheme.headline6,
           ),
           elevation: 0.0,
@@ -188,28 +184,21 @@ class __BodyState extends State<_Body> {
                   if (_formKey.currentState!.validate()) {
                     loaderView(context);
                     final resp = await saleProvider.repositoryInterface
-                        .createSale(
-                            model: SaleModel(
-                                pieces: int.parse(controllerPieces.text),
-                                productId: int.parse(controllerName.text),
-                                total: double.parse(controllerTotal.text),
-                                username: userProvider.dataUser.username,
-                                emailUser: userProvider.dataUser.email));
+                        .updateSale(data: {
+                      'product': controllerName.text,
+                      'pieces': controllerPieces.text,
+                      'total_sale': controllerTotal.text
+                    }, idSale: uiProvider.idSaleSelect.toString());
 
                     Loader.hide();
-                    if (resp[0] == 201) {
-                      messageThowOK(
+                    if (resp[0] == 200) {
+                      messageOK(
                           context: context,
-                          msg: 'Venta creada',
+                          msg: 'Venta Editada',
                           action: () {
                             Navigator.of(context).pop();
                             Navigator.of(context).pop();
-                            Navigator.of(context).pop();
                             Navigator.of(context).pushNamed('salesPage');
-                          },
-                          secondAction: () {
-                            Navigator.of(context).pop();
-                            _resetFields();
                           });
                     } else if (resp[0] == 400) {
                       saleProvider.repositoryInterface.showSnack(
@@ -233,7 +222,7 @@ class __BodyState extends State<_Body> {
           height: myBanner.size.height.toDouble(),
         ),
       );
-    } else if (!saleProvider.isLoading && !uiProvider.isFormSale) {
+    } else if (!saleProvider.isLoading && !saleProvider.isEdit) {
       final BannerAd myBanner = BannerAd(
         adUnitId: idBanner,
         size: AdSize.fullBanner,
@@ -275,7 +264,9 @@ class __BodyState extends State<_Body> {
                         dataViewWidget(
                             context: context,
                             labelField: 'Nombre de Producto',
-                            valueField: saleProvider.saleDetail.productName!),
+                            valueField: saleProvider.saleDetail.productName
+                                .toString()
+                                .toString()),
                         const SizedBox(
                           height: 20.0,
                         ),
@@ -321,44 +312,17 @@ class __BodyState extends State<_Body> {
             ButtonPrimary(
                 textButton: 'Editar',
                 actionButton: () async {
-                  if (_formKey.currentState!.validate()) {
-                    loaderView(context);
-                    final resp = await saleProvider.repositoryInterface
-                        .createSale(
-                            model: SaleModel(
-                                pieces: int.parse(controllerPieces.text),
-                                productId: int.parse(controllerName.text),
-                                total: double.parse(controllerTotal.text),
-                                username: userProvider.dataUser.username,
-                                emailUser: userProvider.dataUser.email));
+                  controllerName.text =
+                      saleProvider.saleDetail.productId.toString();
 
-                    Loader.hide();
-                    if (resp[0] == 201) {
-                      messageThowOK(
-                          context: context,
-                          msg: 'Venta creada',
-                          action: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed('salesPage');
-                          },
-                          secondAction: () {
-                            Navigator.of(context).pop();
-                            _resetFields();
-                          });
-                    } else if (resp[0] == 400) {
-                      saleProvider.repositoryInterface.showSnack(
-                          context: context,
-                          textMessage: resp[1],
-                          typeSnack: 'error');
-                    } else {
-                      saleProvider.repositoryInterface.showSnack(
-                          context: context,
-                          textMessage: resp[1],
-                          typeSnack: 'error');
-                    }
-                  }
+                  controllerPrice.text =
+                      saleProvider.saleDetail.productPrice.toString();
+                  controllerPieces.text =
+                      saleProvider.saleDetail.pieces.toString();
+                  controllerTotal.text =
+                      saleProvider.saleDetail.total.toString();
+
+                  saleProvider.isEdit = true;
                 }),
           ],
         ),
@@ -371,12 +335,5 @@ class __BodyState extends State<_Body> {
       );
     }
     return ShimmerSale();
-  }
-
-  void _resetFields() {
-    controllerName.text = '';
-    controllerPieces.text = '1';
-    controllerPrice.text = '';
-    controllerTotal.text = '';
   }
 }

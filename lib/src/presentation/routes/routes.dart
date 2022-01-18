@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_stock/src/presentation/pages/add_sale_page/add_sale_page.dart';
 import 'package:stock_stock/src/presentation/pages/home_page/home_page.dart';
 import 'package:stock_stock/src/presentation/pages/login_page/login_page.dart';
 import 'package:stock_stock/src/presentation/pages/new_shop_page/new_shop_page.dart';
@@ -21,6 +22,7 @@ Map<String, WidgetBuilder> getApplicationRoutes(BuildContext context) {
     'productsPage': (BuildContext context) => ProductsPage.init(context),
     'productPage': (BuildContext context) => const ProductPage(),
     'salesPage': (BuildContext context) => const SalesPage(),
-    'salePage': (BuildContext context) => const SalePage()
+    'salePage': (BuildContext context) => const SalePage(),
+    'addSalePage': (BuildContext context) => const AddSalePage()
   };
 }

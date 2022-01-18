@@ -5,6 +5,7 @@ class SaleModel {
   String? username;
   String? emailUser;
   String? productName;
+  String? productPrice;
   String? dateSale;
   String? timeSale;
   int? productId;
@@ -18,12 +19,15 @@ class SaleModel {
       this.dateSale,
       this.timeSale,
       this.productName,
+      this.productPrice,
       this.productId});
 
   factory SaleModel.fromJson(Map<String, dynamic> json) => SaleModel(
         id: json['id'],
         pieces: json['pieces'],
         productName: json['product_name'],
+        productPrice: json['product_price'],
+        productId:json['product'],
         username: json['username'],
         total: json['total_sale'],
         dateSale: json['date'],
