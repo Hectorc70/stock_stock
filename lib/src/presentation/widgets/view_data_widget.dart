@@ -32,7 +32,7 @@ Widget dataViewWidget(
             width: 35.0,
           ),
           Text(
-            valueField,
+            valueField == null ? '' : valueField,
             style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
                 fontFamily: 'PoppinsSemiBold',

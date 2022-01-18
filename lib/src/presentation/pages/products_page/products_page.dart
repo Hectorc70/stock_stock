@@ -6,6 +6,7 @@ import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/products_page/products_provider.dart';
 import 'package:stock_stock/src/presentation/pages/products_page/widgets/shimmer_products_page.dart';
+import 'package:stock_stock/src/presentation/providers/nav_ui.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/bottom_nav.dart';
 import 'package:stock_stock/src/presentation/widgets/card_data.dart';
@@ -61,7 +62,12 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductsProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(
+      context,
+    );
+    final uiProvider = Provider.of<UiProvider>(
+      context,
+    );
     if (provider.isLoading) {
       return const ProductsLoader();
     }
@@ -140,7 +146,10 @@ class _ProductsPageState extends State<ProductsPage> {
                     itemCount: provider.products.length,
                     itemBuilder: (_, i) {
                       return CardCustomPreview(
-                        actionCard: (){},
+                        actionCard: () {
+                          uiProvider.idProductSelect = provider.products[i].id!;
+                          Navigator.of(context).pushNamed('productPage');
+                        },
                         title: provider.products[i].name!,
                         subtitle: provider.products[i].price.toString(),
                         leadingText: provider.products[i].pieces.toString(),
@@ -170,7 +179,7 @@ class _ProductsPageState extends State<ProductsPage> {
       bottomNavigationBar: const BottomNavigatorCustomBar(),
       floatingActionButton: floatButtonNavBar(
           actionButton: () {
-            Navigator.of(context).pushNamed('productPage');
+            Navigator.of(context).pushNamed('addProductPage');
           },
           context: context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
