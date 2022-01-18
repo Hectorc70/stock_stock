@@ -254,9 +254,7 @@ class __BodyState extends State<_Body> {
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Form(
-                    key: _formKey,
-                    child: Column(
+                child: Column(
                       children: [
                         const SizedBox(
                           height: 10.0,
@@ -306,7 +304,7 @@ class __BodyState extends State<_Body> {
                             valueField: saleProvider.saleDetail.username!)
                       ],
                     )),
-              ),
+            
             ),
             const Spacer(),
             ButtonPrimary(

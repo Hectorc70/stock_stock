@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/models/product/product_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
-import 'package:stock_stock/src/presentation/pages/product_form/product_provider.dart';
+import 'package:stock_stock/src/presentation/pages/product_page/product_provider.dart';
+import 'package:stock_stock/src/presentation/pages/product_page/widgets/product_shimmer.dart';
 import 'package:stock_stock/src/presentation/providers/nav_ui.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
 import 'package:stock_stock/src/presentation/widgets/button_primary.dart';
@@ -13,6 +14,7 @@ import 'package:stock_stock/src/presentation/widgets/fields_widget.dart';
 import 'package:stock_stock/src/presentation/widgets/loader_widget.dart';
 import 'package:stock_stock/src/presentation/widgets/messages_popup.dart';
 import 'package:stock_stock/src/presentation/widgets/stock_icons_icons.dart';
+import 'package:stock_stock/src/presentation/widgets/view_data_widget.dart';
 
 class ProductPage extends StatelessWidget {
   const ProductPage({Key? key}) : super(key: key);
@@ -40,7 +42,31 @@ class __BodyState extends State<_Body> {
   TextEditingController controllerPrice = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  void _init() async {
+    final prodProvider = Provider.of<ProductProvider>(context, listen: false);
+    final uiProvider = Provider.of<UiProvider>(context, listen: false);
 
+    prodProvider.isLoading = true;
+    final result = await prodProvider.repositoryInterface
+        .getProductForId(idProduct: uiProvider.idProductSelect.toString());
+
+    if (result[0] == 200) {
+      prodProvider.detailProduct = result[1];
+    } else {
+      Navigator.of(context).pop();
+      prodProvider.repositoryInterface.showSnack(
+          context: context, textMessage: result[1], typeSnack: 'error');
+    }
+    prodProvider.isLoading = false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _init();
+    });
+  }
 
   @override
   void dispose() {
@@ -63,12 +89,12 @@ class __BodyState extends State<_Body> {
     );
     myBanner.load();
 
-    if (uiProvider.isFormproduct) {
+    if (productProvider.isEdit && !productProvider.isLoading) {
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           title: Text(
-            'Crear Producto',
+            'Editar Producto',
             style: Theme.of(context).textTheme.headline6,
           ),
           elevation: 0.0,
@@ -149,25 +175,71 @@ class __BodyState extends State<_Body> {
           height: myBanner.size.height.toDouble(),
         ),
       );
-    }
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        title: Text(
-          'Detalle de Producto',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        elevation: 0.0,
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 30.0,
-              color: Theme.of(context).colorScheme.secondary,
-            )),
+    } else if (!productProvider.isEdit && !productProvider.isLoading) {
+      return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-      ),
-    );
+        appBar: AppBar(
+          title: Text(
+            'Detalle de Producto',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          elevation: 0.0,
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 30.0,
+                color: Theme.of(context).colorScheme.secondary,
+              )),
+          backgroundColor: Theme.of(context).colorScheme.background,
+        ),
+        body: Column(mainAxisSize: MainAxisSize.max, children: [
+          SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    dataViewWidget(
+                        context: context,
+                        labelField: 'Nombre de Producto',
+                        valueField: productProvider.detailProduct.name!),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    dataViewWidget(
+                        context: context,
+                        labelField: 'Piezas en Stock',
+                        valueField:
+                            productProvider.detailProduct.pieces.toString()),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    dataViewWidget(
+                        context: context,
+                        labelField: 'Precio de Producto',
+                        valueField:
+                            productProvider.detailProduct.price.toString()),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                  ],
+                )),
+          ),
+          const Spacer(),
+          ButtonPrimary(textButton: 'Editar', actionButton: () async {}),
+        ]),
+        bottomNavigationBar: Container(
+          alignment: Alignment.center,
+          child: AdWidget(ad: myBanner),
+          width: myBanner.size.width.toDouble(),
+          height: myBanner.size.height.toDouble(),
+        ),
+      );
+    }
+    return const ShimmerProduct();
   }
 }
