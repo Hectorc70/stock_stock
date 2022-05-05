@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_stock/src/domain/constants/constants.dart';
+import 'package:stock_stock/src/core/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/shops_page/shops_provider.dart';
 import 'package:stock_stock/src/presentation/pages/shops_page/widgets/card_shop.dart';

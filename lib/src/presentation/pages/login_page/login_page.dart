@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_stock/src/domain/constants/assets_constants.dart';
-import 'package:stock_stock/src/domain/constants/constants.dart';
+import 'package:stock_stock/src/core/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/login_page/login_provider.dart';
 import 'package:stock_stock/src/presentation/providers/user_provider.dart';
@@ -13,45 +13,13 @@ import 'package:stock_stock/src/presentation/widgets/google_container.dart';
 import 'package:stock_stock/src/presentation/widgets/loader_widget.dart';
 import 'package:stock_stock/src/presentation/widgets/login_header_widget.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => LoginProvider(
-            repositoryInterface: context.read<RepositoryInterface>()),
-        builder: (_, __) {
-          return _Body();
-        });
-  }
-}
-
-class _Body extends StatefulWidget {
-  _Body({Key? key}) : super(key: key);
-
-  @override
-  __BodyState createState() => __BodyState();
-}
-
-class __BodyState extends State<_Body> {
-  TextEditingController controllerEmail = TextEditingController();
-  TextEditingController controllerPassword = TextEditingController();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  @override
-  void dispose() {
-    controllerEmail.dispose();
-    controllerPassword.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(
-      context,
-    );
-    final userProvider = Provider.of<UserProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _loginProvider = ref.read(loginProvider);
+    // final userProvider = Provider.of<UserProvider>(context);
     final BannerAd myBanner = BannerAd(
       adUnitId: idBanner,
       size: AdSize.banner,
@@ -86,16 +54,16 @@ class __BodyState extends State<_Body> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Form(
-                key: _formKey,
+                key:_loginProvider.formKey,
                 child: Column(
                   children: [
                     CustomFormEmailField(
                       labelField: 'Correo electronico',
-                      controller: controllerEmail,
+                      controller: _loginProvider.controllerEmail,
                     ),
                     CustomFormPasswordField(
                       labelField: 'Contraseña',
-                      controller: controllerPassword,
+                      controller: _loginProvider.controllerPassword,
                     ),
                     Container(
                         alignment: AlignmentDirectional.centerEnd,
@@ -110,16 +78,16 @@ class __BodyState extends State<_Body> {
                             ))),
                     ButtonPrimary(
                       actionButton: () async {
-                        if (_formKey.currentState!.validate()) {
+                      /*   if (_loginProvider.formKey.currentState!.validate()) {
                           loaderView(context);
-                          final resp = await loginProvider.repositoryInterface
+                          final resp = await _loginProvider.repositoryInterface
                               .loginFirebaseWithEmail(
                                   email: controllerEmail.text,
                                   password: controllerPassword.text);
                           Loader.hide();
                           if (resp[0] == 1) {
-                            userProvider.dataUser = resp[1];
-                            loginProvider.repositoryInterface.savePrefs(
+                            // userProvider.dataUser = resp[1];
+                            _loginProvider.repositoryInterface.savePrefs(
                                 type: String,
                                 key: 'tokenUser',
                                 value: userProvider.dataUser.tokenUser);
@@ -134,8 +102,8 @@ class __BodyState extends State<_Body> {
                                 context: context,
                                 textMessage: resp[1],
                                 typeSnack: 'error');
-                          }
-                        }
+                          } 
+                        }*/
                       },
                       textButton: 'Login',
                     ),
@@ -165,7 +133,7 @@ class __BodyState extends State<_Body> {
                       height: 20.0,
                     ),
                     googleButton(action: () async {
-                      final resp = await loginProvider.repositoryInterface
+                      /* final resp = await loginProvider.repositoryInterface
                           .getDataGoogle();
                       if (resp[0] == 1) {
                         loaderView(context);
@@ -195,7 +163,7 @@ class __BodyState extends State<_Body> {
                               textMessage: respL[1],
                               typeSnack: 'error');
                         }
-                      }
+                      } */
                     }),
                     const SizedBox(
                       height: 20.0,

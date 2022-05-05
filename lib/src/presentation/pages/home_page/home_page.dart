@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_stock/src/domain/constants/constants.dart';
-import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
+import 'package:stock_stock/src/core/constants/constants.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/home_page/home_provider.dart';
 import 'package:stock_stock/src/presentation/providers/nav_ui.dart';

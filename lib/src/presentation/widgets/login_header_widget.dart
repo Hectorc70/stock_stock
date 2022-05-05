@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stock_stock/src/domain/constants/assets_constants.dart';
+import 'package:stock_stock/src/core/constants/assets_constants.dart';
 
 Widget logoWidget() {
   return SafeArea(

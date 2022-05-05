@@ -2,21 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:stock_stock/src/domain/models/product/product_model.dart';
 import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
+import 'package:stock_stock/src/domain/models/user/user_request_model.dart';
+import 'package:stock_stock/src/domain/models/user/user_response_model.dart';
 
 abstract class RepositoryInterface {
   void showSnack(
-      {required BuildContext context,
-      required String textMessage,
-      required typeSnack});
+      {BuildContext? context, required String textMessage, required typeSnack});
 
   Future<void> savePrefs(
       {required dynamic type, required String key, required dynamic value});
   Future<dynamic> loadPrefs({required dynamic type, required String key});
 
-  Future<List<dynamic>> registerFirebaseWithEmail(
-      {required String email,
-      required String password,
-      required String username});
+  Future<UserResponseModel> registerFirebaseWithEmail({
+    required UserRequestModel model,
+    required String password,
+  });
 
   Future<List<dynamic>> loginFirebaseWithEmail(
       {required String email, required String password});
@@ -29,15 +29,12 @@ abstract class RepositoryInterface {
 
   Future<List<dynamic>> registerFirebaseWithGoogle(
       {required OAuthCredential credential,
-      required String email,
+      required UserRequestModel model,
       required String username});
 
   Future<List<dynamic>> checkUserForEmail({required String email});
 
-  Future<List<dynamic>> createNewUser(
-      {required String email,
-      required String username,
-      required String idFirebase});
+  Future<UserResponseModel> createNewUser({required UserRequestModel model});
 
   Future<List<dynamic>> getDataUserFirebase({required String idFirebase});
 

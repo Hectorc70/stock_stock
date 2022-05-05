@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:stock_stock/src/core/constants/constants.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
-import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
 
 class ApiSale {
@@ -116,7 +116,10 @@ class ApiSale {
     try {
       await loadToken();
       final response = await http.put(url,
-          headers: {'Authorization': 'Token $tokenUser'}, body: data);
+          headers: {
+            'Authorization': 'Token $tokenUser'
+          },
+          body: data);
       if (response.statusCode == 200) {
         final dataUTF8 = utf8.decode(response.bodyBytes);
         final responseDecode = jsonDecode(dataUTF8);

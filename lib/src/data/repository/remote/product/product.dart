@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:stock_stock/src/core/constants/constants.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
-import 'package:stock_stock/src/domain/constants/constants.dart';
 import 'package:stock_stock/src/domain/models/product/product_model.dart';
 
 class ApiProduct {

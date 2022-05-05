@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_stock/src/domain/constants/constants.dart';
+import 'package:stock_stock/src/core/constants/constants.dart';
 import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 import 'package:stock_stock/src/presentation/pages/add_sale_page/add_sale_provider.dart';

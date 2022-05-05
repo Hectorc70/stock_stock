@@ -34,7 +34,7 @@ dependencies:
   select_form_field: ^2.2.0
   awesome_notifications: ^0.6.16
   firebase_messaging: ^10.0.7
-
+  flutter_riverpod: ^1.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

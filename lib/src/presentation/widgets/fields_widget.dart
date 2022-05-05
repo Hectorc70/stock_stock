@@ -272,6 +272,137 @@ class CustomFormPiecesField extends StatelessWidget {
   }
 }
 
+class CustomFormSelectField extends StatelessWidget {
+  String labelField = '';
+  String hintField = '';
+  TextEditingController controller;
+
+  double widthField;
+  List<PopupMenuItem> items;
+  void Function(dynamic)? onSelect;
+  CustomFormSelectField(
+      {required this.labelField,
+      required this.hintField,
+      required this.controller,
+      required this.items,
+      required this.onSelect,
+      this.widthField = double.infinity,
+      Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color colorSecond = Theme.of(context).colorScheme.secondary;
+    final widthScreen = MediaQuery.of(context).size.width;
+
+    return Container(
+      width: widthField,
+      margin: const EdgeInsets.only(top: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            labelField,
+            style: TextStyle(
+                color: colorSecond, fontFamily: 'PoppinsLight', fontSize: 18.0),
+          ),
+          Container(
+              height: 50.0,
+              decoration: BoxDecoration(
+                  color: Color(0xFFF8FDFF),
+                  border: Border.all(color: colorSecond),
+                  borderRadius: BorderRadius.circular(15.0)),
+              child: Row(
+                children: [
+                  Container(
+                    width: widthScreen * .60,
+                    child: TextFormField(
+                      enabled: false,
+                      style: TextStyle(
+                          color: colorSecond, fontFamily: 'PoppinsSemiBold'),
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: hintField,
+                        hintStyle: const TextStyle(
+                            color: Color(0xFF7FB3C5), fontFamily: 'Poppins'),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 12),
+                        filled: false,
+                        isDense: true,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        focusedErrorBorder: InputBorder.none,
+                        border: InputBorder.none,
+                      ),
+                      validator: (value) {
+                        if (value == '' || value == null) {
+                          return 'Este campo es requerido';
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  PopupMenuButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: colorSecond,
+                        size: 30.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      onSelected: onSelect,
+                      itemBuilder: (BuildContext context) => items),
+                ],
+              ))
+
+          /* DropdownButtonFormField(
+            style: TextStyle(color: colorSecond, fontFamily: 'PoppinsSemiBold'),
+            dropdownColor: Theme.of(context).colorScheme.background,
+            icon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: colorSecond,
+              size: 30.0,
+            ),
+            isExpanded: true,
+            decoration: InputDecoration(
+
+                floatingLabelAlignment: FloatingLabelAlignment.start,
+                hintText: hintField,
+                hintStyle: const TextStyle(
+                    color: Color(0xFF7FB3C5), fontFamily: 'Poppins'),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+                filled: true,
+                isDense: true,
+                fillColor: const Color(0xFFF8FDFF),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(width: 2.0, color: colorSecond)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(color: colorSecond)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(color: colorSecond))),
+            value: 1,
+            onChanged: (value) {},
+            items: [
+              DropdownMenuItem(
+                child: Text('HOla'),
+                value: 1,
+              )
+            ],
+          ), */
+        ],
+      ),
+    );
+  }
+}
+
 class FieldSelectForm extends StatelessWidget {
   FieldSelectForm(
       {required this.hintTextC,

@@ -30,4 +30,5 @@ class StockIcons {
   static const IconData sales = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData homepage = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData stock = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData correo = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -12,19 +12,32 @@ import 'package:stock_stock/src/presentation/pages/sales_page/sales_page.dart';
 import 'package:stock_stock/src/presentation/pages/shops_page/shops_page.dart';
 import 'package:stock_stock/src/presentation/pages/splash_page/splash_page.dart';
 
+const splashPage = '/';
+const loginPage = 'loginPage';
+const registerPage = 'registerPage';
+const homePage = 'homePage';
+const newShopPage = 'newShopPage';
+const shopsPage = 'shopsPage';
+const productsPage = 'productsPage';
+const productPage = 'productPage';
+const addProductPage = 'addProductPage';
+const salesPage = 'salesPage';
+const salePage = 'salePage';
+const addSalePage = 'addSalePage';
+
 Map<String, WidgetBuilder> getApplicationRoutes(BuildContext context) {
   return <String, WidgetBuilder>{
-    '/': (BuildContext context) => SplashPage.init(context),
-    'loginPage': (BuildContext context) => const LoginPage(),
-    'registerPage': (BuildContext context) => const RegisterPage(),
-    'homePage': (BuildContext context) => HomePage(),
-    'newShopPage': (BuildContext context) => const NewShopPage(),
-    'shopsPage': (BuildContext context) => const ShopsPage(),
-    'productsPage': (BuildContext context) => ProductsPage.init(context),
-    'productPage': (BuildContext context) => const ProductPage(),
-    'addProductPage': (BuildContext context) => const AddProductPage(),
-    'salesPage': (BuildContext context) => const SalesPage(),
-    'salePage': (BuildContext context) => const SalePage(),
-    'addSalePage': (BuildContext context) => const AddSalePage()
+    splashPage: (BuildContext context) => SplashPage(),
+    loginPage: (BuildContext context) => const LoginPage(),
+    registerPage: (BuildContext context) => const RegisterPage(),
+    homePage: (BuildContext context) => HomePage(),
+    newShopPage: (BuildContext context) => const NewShopPage(),
+    shopsPage: (BuildContext context) => const ShopsPage(),
+    productsPage: (BuildContext context) => ProductsPage.init(context),
+    productPage: (BuildContext context) => const ProductPage(),
+    addProductPage: (BuildContext context) => const AddProductPage(),
+    salesPage: (BuildContext context) => const SalesPage(),
+    salePage: (BuildContext context) => const SalePage(),
+    addSalePage: (BuildContext context) => const AddSalePage()
   };
 }

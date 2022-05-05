@@ -52,9 +52,10 @@ class __BodyState extends State<_Body> {
     final provider = Provider.of<NewShopProvider>(
       context,
     );
-    final userprovider = Provider.of<UserProvider>(
+    /* final userprovider = Provider.of<UserProvider>(
       context,
-    );
+    ); */
+    // final userprovider = 
     return WillPopScope(
         child: Scaffold(
           appBar: AppBar(
@@ -92,11 +93,11 @@ class __BodyState extends State<_Body> {
                     loaderView(context);
                     final resp = await provider.repositoryInterface
                         .createNewShop(
-                            idUser: userprovider.dataUser.id.toString(),
+                            idUser:' userprovider.dataUser.id.toString()',
                             nameShop: controllerNameShop.text);
                     Loader.hide();
                     if (resp[0] == 201) {
-                      userprovider.selectShop = resp[1].id.toString();
+                      // userprovider.selectShop = resp[1].id.toString();
                       messageOK(
                           context: context,
                           msg: 'Negocio creado correctamente');

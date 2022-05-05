@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:stock_stock/main.dart';
+import 'package:stock_stock/src/core/constants/prefs_constants.dart';
 import 'package:stock_stock/src/data/repository/local/preferences_user.dart';
 import 'package:stock_stock/src/data/repository/local/translate_errors_firebase.dart';
 import 'package:stock_stock/src/data/repository/remote/product/product.dart';
@@ -9,15 +12,25 @@ import 'package:stock_stock/src/data/repository/remote/shop/shop.dart';
 import 'package:stock_stock/src/data/repository/remote/user/user.dart';
 import 'package:stock_stock/src/domain/models/product/product_model.dart';
 import 'package:stock_stock/src/domain/models/sale/sale_model.dart';
+import 'package:stock_stock/src/domain/models/user/user_model.dart';
+import 'package:stock_stock/src/domain/models/user/user_request_model.dart';
+import 'package:stock_stock/src/domain/models/user/user_response_model.dart';
 import 'package:stock_stock/src/domain/repository/repository_interface.dart';
 
+final repositoryProvider = Provider.autoDispose<RepositoryInterface>(
+    (ref) => RepositoryImplementation(ref.read));
+
 class RepositoryImplementation implements RepositoryInterface {
+  final Reader _read;
+  RepositoryImplementation(this._read);
   @override
   void showSnack(
-      {required BuildContext context,
+      {BuildContext? context,
       required String textMessage,
       required typeSnack}) {
-    Color color = Theme.of(context).colorScheme.primary;
+    BuildContext _context =
+        context == null ? navigatorKey.currentContext! : context;
+    Color color = Theme.of(_context).colorScheme.primary;
 
     if (typeSnack == 'error') {
       color = Colors.red.shade300;
@@ -25,13 +38,39 @@ class RepositoryImplementation implements RepositoryInterface {
 
     final snackBar = SnackBar(
       backgroundColor: color,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          bottom: MediaQuery.of(_context).size.height - 130,
+          right: 20,
+          left: 20),
       content: Text(
         textMessage,
         textAlign: TextAlign.center,
       ),
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(_context).showSnackBar(snackBar);
+  }
+
+  @override
+  void showMessageOK({required String textMessage}) {
+    BuildContext _context = navigatorKey.currentContext!;
+    Color color = Theme.of(_context).colorScheme.primary;
+
+    final snackBar = SnackBar(
+      backgroundColor: color,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          bottom: MediaQuery.of(_context).size.height - 130,
+          right: 20,
+          left: 20),
+      content: Text(
+        textMessage,
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    ScaffoldMessenger.of(_context).showSnackBar(snackBar);
   }
 
   @override
@@ -53,36 +92,39 @@ class RepositoryImplementation implements RepositoryInterface {
   }
 
   @override
-  Future<List<dynamic>> registerFirebaseWithEmail(
-      {required String email,
-      required String password,
-      required String username}) async {
+  Future<UserResponseModel> registerFirebaseWithEmail({
+    required UserRequestModel model,
+    required String password,
+  }) async {
     final prefs = PreferencesUser();
 
-    final respCheck = await checkUserForEmail(email: email);
+    final respCheck = await checkUserForEmail(email: model.email);
 
     if (respCheck[0] == 200) {
-      return [0, 'Email ya en uso, Favor de Loguearse'];
+      return UserResponseModel(
+          statusCode: 0,
+          data: UserModel(),
+          message: 'Email ya en uso, Favor de Loguearse');
     } else {
       try {
         final resp = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
+          email: model.email,
           password: password,
         );
         String? idUser = resp.user?.uid;
+        model.idFirebase = idUser.toString();
         final respCreate = await createNewUser(
-            email: email, idFirebase: idUser!, username: username);
-
-        if (respCreate[0] == 201) {
-          prefs.savePrefs(type: String, key: 'tokenFirebase', value: idUser);
-          return [1, respCreate[1]];
-        } else {
-          return [0, respCreate[0].toString() + respCreate[1]];
-        }
+          model: model,
+        );
+        prefs.savePrefs(
+            type: String,
+            key: prefConstToken,
+            value: respCreate.data.tokenUser.toString());
+        return respCreate;
       } on FirebaseAuthException catch (e) {
         String errorDesc = errorConvert(e.code);
-
-        return [0, errorDesc];
+        return UserResponseModel(
+            statusCode: 0, data: UserModel(), message: errorDesc);
       }
     }
   }
@@ -175,11 +217,11 @@ class RepositoryImplementation implements RepositoryInterface {
   @override
   Future<List<dynamic>> registerFirebaseWithGoogle(
       {required OAuthCredential credential,
-      required String email,
+      required UserRequestModel model,
       required String username}) async {
     try {
       final prefs = PreferencesUser();
-      final respCheck = await checkUserForEmail(email: email);
+      final respCheck = await checkUserForEmail(email: model.email);
 
       if (respCheck[0] == 200) {
         return [0, 'Correo ya en uso, intente con otro correo'];
@@ -189,13 +231,12 @@ class RepositoryImplementation implements RepositoryInterface {
 
         String? idUser = resp.user?.uid;
 
-        final respCreate = await createNewUser(
-            email: email, username: username, idFirebase: idUser!);
-        if (respCreate[0] == 201) {
+        final respCreate = await createNewUser(model: model);
+        if (respCreate.statusCode == 201) {
           prefs.savePrefs(type: String, key: 'tokenFirebase', value: idUser);
-          return [1, respCreate[1]];
+          return [1, respCreate.message];
         } else {
-          return [0, respCreate[0].toString() + respCreate[1]];
+          return [0, respCreate.statusCode.toString() + respCreate.message];
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -212,13 +253,9 @@ class RepositoryImplementation implements RepositoryInterface {
   }
 
   @override
-  Future<List<dynamic>> createNewUser(
-      {required String email,
-      required String username,
-      required String idFirebase}) async {
-    final resp = await ApiUser()
-        .createUser(email: email, idFirebase: idFirebase, username: username);
-    return resp;
+  Future<UserResponseModel> createNewUser(
+      {required UserRequestModel model}) async {
+    return await ApiUser().createUser(model: model);
   }
 
   @override
